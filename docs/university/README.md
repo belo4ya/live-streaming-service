@@ -55,11 +55,11 @@
 
 #### Реализация
 
-<img src="../assets/images/design-overview.png" width="600"/>
+<img src="../assets/images/design-overview.png" width="800"/>
 
 ### Проблемы
 
-**Отсутствие пользователького интерфейса.** Вместо этого у нас будут дашборды метрик, логи, test coverage, OpenAPI и GraphQL песочница.
+**Отсутствие пользователького интерфейса.** Вместо этого у нас будут метрики с дашбордами, логи, test coverage, OpenAPI и GraphQL песочница.
 
 ## Ресурсы
 
