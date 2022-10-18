@@ -41,8 +41,8 @@
 #### Выбор целевого решения
 
 Анализ успешных зарубежных видеостриминговых сервисов: Netflix, Amazon Prime Video, YouTube, Facebook Watch, Tencent Video.
-Анализ успешных зарубежных сервисов потокового вещания: **Twitch**, YouTube Live, **GoodGame**, Bigo Live, Bilibili, DouYu, Huya, Trovo.
-Анализ отечественных сервисов: **WASD**, **VK Play Live**, Okko.
+Анализ успешных зарубежных сервисов потокового вещания: **Twitch**, YouTube Live, Bigo Live, Bilibili, DouYu, Huya, Trovo.
+Анализ отечественных сервисов: **GoodGame**, WASD, VK Play Live, Okko.
 
 Обзор **FFmpeg**. Обзор приложений для трансляции видео (**OBS**, XSplit Broadcaster, vMix, Twitch Studio, Streamlabs и др.) и описание принципов их работы.
 Обзор RTMP/HLS совместимых видеоплееров (**VLC** и др.).
