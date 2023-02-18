@@ -1,0 +1,6 @@
+localhost:2015 {
+	@authelia path /authelia /authelia/*
+	handle @authelia {
+		reverse_proxy localhost:9091
+	}
+}
