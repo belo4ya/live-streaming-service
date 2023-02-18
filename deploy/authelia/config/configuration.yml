@@ -1,5 +1,3 @@
-jwt_secret: jwt_secret
-
 server:
   host: 0.0.0.0
   port: 9091
@@ -12,18 +10,19 @@ authentication_backend:
 access_control:
   default_policy: deny
   rules:
-   - domain: live.streaming.service.local
+   - domain: localhost
      policy: one_factor
 
 session:
-  secret: session_secret
-  domain: live.streaming.service.local
+  domain: localhost
 
 storage:
-  encryption_key: storage_encryption_key
   local:
-    path: /config/db.sqlite3
+    path: /data/authelia.sqlite3
 
 notifier:
   filesystem:
-    filename: /config/notification.txt
+    filename: /data/notification.txt
+
+log:
+  level: debug
