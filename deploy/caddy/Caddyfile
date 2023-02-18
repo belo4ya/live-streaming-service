@@ -1,6 +1,13 @@
-localhost:2015 {
+:8000 {
+	respond "Hello form Caddy"
+
 	@authelia path /authelia /authelia/*
 	handle @authelia {
-		reverse_proxy localhost:9091
+		reverse_proxy :9091
+	}
+
+	@streams path /streams /streams/*
+	handle @streams {
+		reverse_proxy :8001
 	}
 }

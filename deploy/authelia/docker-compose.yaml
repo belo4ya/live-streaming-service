@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  authelia:
+    container_name: authelia
+    image: authelia/authelia:latest
+#    environment:
+#      AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
+#      AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
+    #    expose:
+    #      - 9091
+    ports:
+      - "9091:9091"
+    volumes:
+      - ./config:/config
+      - ./secrets:/secrets
