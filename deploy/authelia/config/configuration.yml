@@ -5,7 +5,7 @@ server:
 
 authentication_backend:
   file:
-    path: /config/users_database.yml
+    path: /data/users_database.yml
 
 access_control:
   default_policy: deny

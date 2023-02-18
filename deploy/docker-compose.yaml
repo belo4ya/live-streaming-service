@@ -1,5 +1,18 @@
 version: "3.8"
+
 services:
+  caddy:
+    container_name: caddy
+    image: caddy:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./caddy/config/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/config:/config
+      - ./caddy/data:/data
+
   authelia:
     container_name: authelia
     image: authelia/authelia:latest
