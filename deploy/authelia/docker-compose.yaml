@@ -9,7 +9,7 @@ services:
     #    expose:
     #      - 9091
     ports:
-      - "9091:9091"
+      - "127.0.0.1:9091:9091"
     volumes:
       - ./config:/config
 #      - ./secrets:/secrets

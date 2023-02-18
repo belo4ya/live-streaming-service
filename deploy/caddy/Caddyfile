@@ -1,7 +1,7 @@
-http://live.streaming.service.local {
+https://localhost {
 	respond "Caddy Reverse Proxy"
 
-	@authelia path /authelia /authelia/*
+	@authelia path /authelia /authelia/* /api/* /static/* /locales/*
 	handle @authelia {
 		reverse_proxy :9091
 	}
@@ -9,7 +9,7 @@ http://live.streaming.service.local {
 	@streams path /streams /streams/*
 	handle @streams {
 		forward_auth :9091 {
-			uri /api/verify?rd=http://live.streaming.service.local/authelia/
+			uri /api/verify?rd=https://localhost/authelia/
 			copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
 		}
 		reverse_proxy :8001

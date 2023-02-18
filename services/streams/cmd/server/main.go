@@ -13,6 +13,7 @@ type RootResponse struct {
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.Header)
 		w.Header().Set("Content-Type", "application/json")
 		err := json.NewEncoder(w).Encode(RootResponse{Name: "Streams", Version: "1"})
 		if err != nil {

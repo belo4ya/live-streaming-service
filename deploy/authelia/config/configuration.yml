@@ -6,9 +6,8 @@ authentication_backend:
 
 access_control:
   default_policy: deny
-
   rules:
-   - domain: 'localhost:8001'
+   - domain: localhost
      policy: one_factor
 
 session:
