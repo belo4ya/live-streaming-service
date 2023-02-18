@@ -1,5 +1,5 @@
-:8000 {
-	respond "Hello form Caddy"
+http://live.streaming.service.local {
+	respond "Caddy Reverse Proxy"
 
 	@authelia path /authelia /authelia/*
 	handle @authelia {
@@ -8,6 +8,10 @@
 
 	@streams path /streams /streams/*
 	handle @streams {
+		forward_auth :9091 {
+			uri /api/verify?rd=http://live.streaming.service.local/authelia/
+			copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+		}
 		reverse_proxy :8001
 	}
 }
