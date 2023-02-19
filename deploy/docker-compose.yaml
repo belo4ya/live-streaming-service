@@ -61,7 +61,7 @@ services:
       - "9095"
     volumes:
       - ./loki/config/loki.yaml:/etc/loki/config.yaml
-      - ./loki/data:/data
+      - ./loki/data:/tmp/loki
   loki_writer:
     container_name: loki_writer
     image: grafana/loki:latest
@@ -72,7 +72,7 @@ services:
       - "9095"
     volumes:
       - ./loki/config/loki.yaml:/etc/loki/config.yaml
-      - ./loki/data:/data
+      - ./loki/data:/tmp/loki
   promtail:
     container_name: promtail
     image: grafana/promtail:latest
