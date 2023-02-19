@@ -7,4 +7,4 @@ scrape_configs:
     scrape_interval: 15s
     metrics_path: /minio/v2/metrics/cluster
     static_configs:
-      - targets: [ minioloki:9000 ]
+      - targets: [ minio-loki:9000 ]

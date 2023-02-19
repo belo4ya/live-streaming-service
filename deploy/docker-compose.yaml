@@ -86,7 +86,7 @@ services:
       - loki_writer
   minio_loki:
     container_name: minio_loki
-    hostname: minioloki
+    hostname: minio-loki
     image: minio/minio:latest
     entrypoint:
       - sh
