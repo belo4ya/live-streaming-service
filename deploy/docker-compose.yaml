@@ -51,64 +51,64 @@ services:
     depends_on:
       - prometheus
 
-  cadvisor:
-    container_name: cadvisor
-    image: gcr.io/cadvisor/cadvisor:v0.47.1
-    ports:
-      - "8080"
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
   node-exporter:
     container_name: node-exporter
     image: prom/node-exporter:latest
     ports:
       - "9100"
+  #  cadvisor:
+  #    container_name: cadvisor
+  #    image: gcr.io/cadvisor/cadvisor:v0.47.1
+  #    ports:
+  #      - "8080"
+  #    volumes:
+  #      - /:/rootfs:ro
+  #      - /var/run:/var/run:rw
+  #      - /sys:/sys:ro
+  #      - /var/lib/docker/:/var/lib/docker:ro
 
-#  loki:
-#    container_name: loki
-#    image: grafana/loki:latest
-#    command: "-config.file=/etc/loki/config.yaml -target=all"
-#    ports:
-#      - "3100"
-#    volumes:
-#      - ./loki/config/loki.yaml:/etc/loki/config.yaml
-#      - ./loki/data:/data
-#    depends_on:
-#      - minio_loki
-#  promtail:
-#    container_name: promtail
-#    image: grafana/promtail:latest
-#    command: "-config.file=/etc/promtail/config.yaml"
-#    volumes:
-#      - ./loki/config/promtail.yaml:/etc/promtail/config.yaml:ro
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    depends_on:
-#      - loki
-#  minio_loki:
-#    container_name: minio_loki
-#    hostname: minio-loki
-#    image: minio/minio:latest
-#    entrypoint:
-#      - sh
-#      - -euc
-#      - |
-#        mkdir -p /data/loki-data && \
-#        minio server --console-address ":9001" /data
-#    environment:
-#      MINIO_ACCESS_KEY: minio_access_key
-#      MINIO_SECRET_KEY: minio_secret_key
-#      MINIO_PROMETHEUS_AUTH_TYPE: public
-#      MINIO_PROMETHEUS_URL: http://prometheus:9090
-#      MINIO_PROMETHEUS_JOB_ID: minio-loki
-#      MINIO_UPDATE: off
-#    ports:
-#      - "9000"
-#      - "9001:9001"
-#    volumes:
-#      - ./loki/s3:/data
+  loki:
+    container_name: loki
+    image: grafana/loki:latest
+    command: "-config.file=/etc/loki/config.yaml -target=all"
+    ports:
+      - "3100"
+    volumes:
+      - ./loki/config/loki.yaml:/etc/loki/config.yaml
+      - ./loki/data:/data
+    depends_on:
+      - minio_loki
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:latest
+    command: "-config.file=/etc/promtail/config.yaml"
+    volumes:
+      - ./loki/config/promtail.yaml:/etc/promtail/config.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - loki
+  minio_loki:
+    container_name: minio_loki
+    hostname: minio-loki
+    image: minio/minio:latest
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /data/loki-data && \
+        minio server --console-address ":9001" /data
+    environment:
+      MINIO_ACCESS_KEY: minio_access_key
+      MINIO_SECRET_KEY: minio_secret_key
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+      MINIO_PROMETHEUS_URL: http://prometheus:9090
+      MINIO_PROMETHEUS_JOB_ID: minio-loki
+      MINIO_UPDATE: off
+    ports:
+      - "9000"
+      - "9001:9001"
+    volumes:
+      - ./loki/s3:/data
 
   flog:
     container_name: flog
