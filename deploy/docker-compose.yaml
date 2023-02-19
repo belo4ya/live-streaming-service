@@ -37,3 +37,13 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/data/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
