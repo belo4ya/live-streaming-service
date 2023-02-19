@@ -1,3 +1,10 @@
+{
+	admin 0.0.0.0:2019
+	servers {
+		metrics
+	}
+}
+
 https://live.streaming.service.local {
 	respond "Caddy Reverse Proxy"
 
