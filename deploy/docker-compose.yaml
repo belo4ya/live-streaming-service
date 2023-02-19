@@ -13,19 +13,19 @@ services:
       - ./caddy/config:/config
       - ./caddy/data:/data
 
-#  authelia:
-#    container_name: authelia
-#    image: authelia/authelia:latest
-#    environment:
-#      AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
-#      AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
-#      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/STORAGE_ENCRYPTION_KEY
-#    ports:
-#      - "9091:9091"
-#    volumes:
-#      - ./authelia/config:/config
-#      - ./authelia/secrets:/secrets
-#      - ./authelia/data:/data
+  #  authelia:
+  #    container_name: authelia
+  #    image: authelia/authelia:latest
+  #    environment:
+  #      AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
+  #      AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
+  #      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/STORAGE_ENCRYPTION_KEY
+  #    ports:
+  #      - "9091:9091"
+  #    volumes:
+  #      - ./authelia/config:/config
+  #      - ./authelia/secrets:/secrets
+  #      - ./authelia/data:/data
 
   prometheus:
     container_name: prometheus
@@ -60,7 +60,8 @@ services:
       - "9095"
     volumes:
       - ./loki/config/loki.yaml:/etc/loki/config.yaml
-      - ./loki/data:/tmp/loki
+    depends_on:
+      - minio_loki
   loki_writer:
     container_name: loki_writer
     image: grafana/loki:latest
@@ -71,7 +72,8 @@ services:
       - "9095"
     volumes:
       - ./loki/config/loki.yaml:/etc/loki/config.yaml
-      - ./loki/data:/tmp/loki
+    depends_on:
+      - minio_loki
   promtail:
     container_name: promtail
     image: grafana/promtail:latest
@@ -82,8 +84,31 @@ services:
     depends_on:
       - loki_reader
       - loki_writer
+  minio_loki:
+    container_name: minio_loki
+    hostname: minioloki
+    image: minio/minio:latest
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /data/loki-data && \
+        mkdir -p /data/loki-ruler && \
+        minio server --console-address ":9001" /data
+    environment:
+      MINIO_ACCESS_KEY: minio_access_key
+      MINIO_SECRET_KEY: minio_secret_key
+      MINIO_PROMETHEUS_AUTH_TYPE: public
+      MINIO_PROMETHEUS_URL: http://prometheus:9090
+      MINIO_PROMETHEUS_JOB_ID: minio-loki
+      MINIO_UPDATE: off
+    ports:
+      - "9000"
+      - "9001:9001"
+    volumes:
+      - ./loki/data:/data
 
   flog:
     container_name: flog
     image: mingrammer/flog
-    command: "-f json -d 5s -l"
+    command: "-f json -d 1s -l"

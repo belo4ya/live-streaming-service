@@ -1,5 +1,10 @@
 scrape_configs:
   - job_name: caddy
-    scrape_interval: 30s
+    scrape_interval: 15s
     static_configs:
       - targets: [ caddy:2019 ]
+  - job_name: minio-loki
+    scrape_interval: 15s
+    metrics_path: /minio/v2/metrics/cluster
+    static_configs:
+      - targets: [ minioloki:9000 ]
