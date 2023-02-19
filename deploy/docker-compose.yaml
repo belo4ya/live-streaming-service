@@ -35,6 +35,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/config/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - ./prometheus/data:/prometheus
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -50,28 +51,15 @@ services:
     depends_on:
       - prometheus
 
-  loki_reader:
-    container_name: loki_reader
+  loki:
+    container_name: loki
     image: grafana/loki:latest
-    command: "-config.file=/etc/loki/config.yaml -target=read"
+    command: "-config.file=/etc/loki/config.yaml -target=all"
     ports:
-      - "3101:3100"
-      - "7946"
-      - "9095"
+      - "3100"
     volumes:
       - ./loki/config/loki.yaml:/etc/loki/config.yaml
-    depends_on:
-      - minio_loki
-  loki_writer:
-    container_name: loki_writer
-    image: grafana/loki:latest
-    command: "-config.file=/etc/loki/config.yaml -target=write"
-    ports:
-      - "3102:3100"
-      - "7946"
-      - "9095"
-    volumes:
-      - ./loki/config/loki.yaml:/etc/loki/config.yaml
+      - ./loki/data:/data
     depends_on:
       - minio_loki
   promtail:
@@ -82,8 +70,7 @@ services:
       - ./loki/config/promtail.yaml:/etc/promtail/config.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - loki_reader
-      - loki_writer
+      - loki
   minio_loki:
     container_name: minio_loki
     hostname: minio-loki
@@ -93,7 +80,6 @@ services:
       - -euc
       - |
         mkdir -p /data/loki-data && \
-        mkdir -p /data/loki-ruler && \
         minio server --console-address ":9001" /data
     environment:
       MINIO_ACCESS_KEY: minio_access_key
@@ -106,9 +92,9 @@ services:
       - "9000"
       - "9001:9001"
     volumes:
-      - ./loki/data:/data
+      - ./loki/s3:/data
 
   flog:
     container_name: flog
     image: mingrammer/flog
-    command: "-f json -d 1s -l"
+    command: "-f json -d 0.5s -l"

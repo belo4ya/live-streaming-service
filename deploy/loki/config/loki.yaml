@@ -1,10 +1,8 @@
+auth_enabled: false
+
 server:
   http_listen_port: 3100
   grpc_listen_port: 9095
-memberlist:
-  join_members:
-    - loki_reader:7946
-    - loki_writer:7946
 
 schema_config:
   configs:
@@ -19,22 +17,41 @@ schema_config:
 common:
   path_prefix: /loki
   replication_factor: 1
-  storage:
-    s3:
-      endpoint: minio-loki:9000
-      insecure: true
-      bucketnames: loki-data
-      access_key_id: minio_access_key
-      secret_access_key: minio_secret_key
-      s3forcepathstyle: true
-  ring:
-    kvstore:
-      store: memberlist
 
-ruler:
-  storage:
-    s3:
-      bucketnames: loki-ruler
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /data/boltdb-index
+    cache_location: /data/boltdb-cache
+    shared_store: s3
+  aws:
+    endpoint: minio-loki:9000
+    insecure: true
+    access_key_id: minio_access_key
+    secret_access_key: minio_secret_key
+    bucketnames: loki-data
+    s3forcepathstyle: true
+
+#distributor:
+#
+#ruler:
+#
+#querier:
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+  wal:
+    dir: /data/ingester-wal
+
+compactor:
+  working_directory: /data/compactor
+  shared_store: s3
+  compaction_interval: 10m
+  retention_enabled: true
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
 
 analytics:
   reporting_enabled: false

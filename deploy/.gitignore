@@ -1,0 +1,8 @@
+/authelia/data/
+/authelia/secrets/
+/caddy/data/
+/grafana/data/
+/loki/data/
+/loki/s3/
+/loki/secrets/
+/prometheus/data/
