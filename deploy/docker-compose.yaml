@@ -14,25 +14,24 @@ services:
       - ./caddy/config:/config
       - ./caddy/data:/data
 
-  authelia:
-    container_name: authelia
-    image: authelia/authelia:latest
-    environment:
-      AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
-      AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
-      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/STORAGE_ENCRYPTION_KEY
-    ports:
-      - "9091:9091"
-    volumes:
-      - ./authelia/config:/config
-      - ./authelia/secrets:/secrets
-      - ./authelia/data:/data
+#  authelia:
+#    container_name: authelia
+#    image: authelia/authelia:latest
+#    environment:
+#      AUTHELIA_JWT_SECRET_FILE: /secrets/JWT_SECRET
+#      AUTHELIA_SESSION_SECRET_FILE: /secrets/SESSION_SECRET
+#      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /secrets/STORAGE_ENCRYPTION_KEY
+#    ports:
+#      - "9091:9091"
+#    volumes:
+#      - ./authelia/config:/config
+#      - ./authelia/secrets:/secrets
+#      - ./authelia/data:/data
 
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
-    command:
-      - --config.file=/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
     volumes:
@@ -40,6 +39,10 @@ services:
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     ports:
       - "3000:3000"
     volumes:
@@ -47,3 +50,41 @@ services:
       - ./grafana/data/provisioning:/etc/grafana/provisioning
     depends_on:
       - prometheus
+
+  loki_reader:
+    container_name: loki_reader
+    image: grafana/loki:latest
+    command: "-config.file=/etc/loki/config.yaml -target=read"
+    ports:
+      - "3101:3100"
+      - "7946"
+      - "9095"
+    volumes:
+      - ./loki/config/loki.yaml:/etc/loki/config.yaml
+      - ./loki/data:/data
+  loki_writer:
+    container_name: loki_writer
+    image: grafana/loki:latest
+    command: "-config.file=/etc/loki/config.yaml -target=write"
+    ports:
+      - "3102:3100"
+      - "7946"
+      - "9095"
+    volumes:
+      - ./loki/config/loki.yaml:/etc/loki/config.yaml
+      - ./loki/data:/data
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:latest
+    command: "-config.file=/etc/promtail/config.yaml"
+    volumes:
+      - ./loki/config/promtail.yaml:/etc/promtail/config.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - loki_reader
+      - loki_writer
+
+  flog:
+    container_name: flog
+    image: mingrammer/flog
+    command: "-f json -d 5s -l"
