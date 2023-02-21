@@ -8,15 +8,18 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "api/vod/v1;v1";
 
-message ListVODsResponse {
-  int64 id = 1;
-  string name = 2;
-  string username = 3;
-  google.protobuf.Timestamp created_at = 4;
-}
-
 service VODService {
   rpc ListVODs(google.protobuf.Empty) returns (ListVODsResponse) {
     option (google.api.http) = {get: "/api/v1/vods"};
   }
+}
+
+message ListVODsResponse {
+  message Stream {
+    int64 id = 1;
+    string name = 2;
+    string username = 3;
+    google.protobuf.Timestamp created_at = 4;
+  }
+  repeated Stream results = 1;
 }

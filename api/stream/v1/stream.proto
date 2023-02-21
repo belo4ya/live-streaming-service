@@ -7,14 +7,17 @@ import "google/protobuf/empty.proto";
 
 option go_package = "api/stream/v1;v1";
 
-message ListStreamsResponse {
-  int64 id = 1;
-  string name = 2;
-  string username = 3;
-}
-
 service StreamService {
   rpc ListStreams(google.protobuf.Empty) returns (ListStreamsResponse) {
     option (google.api.http) = {get: "/api/v1/streams"};
   }
+}
+
+message ListStreamsResponse {
+  message Stream {
+    int64 id = 1;
+    string name = 2;
+    string username = 3;
+  }
+  repeated Stream results = 1;
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"io/fs"
 	"log"
 	"mime"
@@ -15,15 +16,32 @@ import (
 )
 
 type Server struct {
-	v1.UnimplementedEchoServiceServer
+	v1.UnimplementedStreamServiceServer
 }
 
 func NewServer() *Server {
 	return &Server{}
 }
 
-func (s *Server) Echo(_ context.Context, req *v1.EchoRequest) (*v1.EchoResponse, error) {
-	return &v1.EchoResponse{Value: req.Value}, nil
+func (s *Server) ListStreams(_ context.Context, _ *emptypb.Empty) (*v1.ListStreamsResponse, error) {
+	results := []*v1.ListStreamsResponse_Stream{
+		{
+			Id:       1,
+			Name:     "Stream 1",
+			Username: "Streamer 1",
+		},
+		{
+			Id:       2,
+			Name:     "Stream 2",
+			Username: "Streamer 2",
+		},
+		{
+			Id:       3,
+			Name:     "Stream 3",
+			Username: "Streamer 3",
+		},
+	}
+	return &v1.ListStreamsResponse{Results: results}, nil
 }
 
 func RegisterDocHandler(mux *http.ServeMux, openAPISpec []byte) {
@@ -47,7 +65,7 @@ func main() {
 	// Create a gRPC server object
 	grpcSrv := grpc.NewServer()
 	// Attach the Greeter service to the server
-	v1.RegisterEchoServiceServer(grpcSrv, NewServer())
+	v1.RegisterStreamServiceServer(grpcSrv, NewServer())
 	// Serve gRPC server
 	log.Println("Serving gRPC on 0.0.0.0:8080")
 	go func() {
@@ -69,7 +87,7 @@ func main() {
 		log.Fatalln("Failed to dial server:", err)
 	}
 	// Register Greeter
-	err = v1.RegisterEchoServiceHandler(context.Background(), gw, conn)
+	err = v1.RegisterStreamServiceHandler(context.Background(), gw, conn)
 	if err != nil {
 		log.Fatalln("Failed to register gateway:", err)
 	}
