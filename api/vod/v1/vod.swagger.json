@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "api/stream/v1/stream.proto",
+    "title": "api/vod/v1/vod.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "EchoService"
+      "name": "VODService"
     }
   ],
   "consumes": [
@@ -16,15 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/v1/echo": {
+    "/api/v1/vods": {
       "get": {
-        "summary": "Echo procedure example",
-        "operationId": "EchoService_Echo",
+        "operationId": "VODService_ListVODs",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1EchoResponse"
+              "$ref": "#/definitions/v1ListVODsResponse"
             }
           },
           "default": {
@@ -34,16 +33,8 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "value",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
         "tags": [
-          "EchoService"
+          "VODService"
         ]
       }
     }
@@ -77,14 +68,24 @@
         }
       }
     },
-    "v1EchoResponse": {
+    "v1ListVODsResponse": {
       "type": "object",
       "properties": {
-        "value": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
           "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         }
-      },
-      "title": "Response model example"
+      }
     }
   }
 }

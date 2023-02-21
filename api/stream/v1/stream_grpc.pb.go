@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,86 +19,84 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// EchoServiceClient is the client API for EchoService service.
+// StreamServiceClient is the client API for StreamService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type EchoServiceClient interface {
-	// Echo procedure example
-	Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
+type StreamServiceClient interface {
+	ListStreams(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListStreamsResponse, error)
 }
 
-type echoServiceClient struct {
+type streamServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewEchoServiceClient(cc grpc.ClientConnInterface) EchoServiceClient {
-	return &echoServiceClient{cc}
+func NewStreamServiceClient(cc grpc.ClientConnInterface) StreamServiceClient {
+	return &streamServiceClient{cc}
 }
 
-func (c *echoServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
-	out := new(EchoResponse)
-	err := c.cc.Invoke(ctx, "/api.stream.v1.EchoService/Echo", in, out, opts...)
+func (c *streamServiceClient) ListStreams(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListStreamsResponse, error) {
+	out := new(ListStreamsResponse)
+	err := c.cc.Invoke(ctx, "/api.stream.v1.StreamService/ListStreams", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// EchoServiceServer is the server API for EchoService service.
-// All implementations should embed UnimplementedEchoServiceServer
+// StreamServiceServer is the server API for StreamService service.
+// All implementations should embed UnimplementedStreamServiceServer
 // for forward compatibility
-type EchoServiceServer interface {
-	// Echo procedure example
-	Echo(context.Context, *EchoRequest) (*EchoResponse, error)
+type StreamServiceServer interface {
+	ListStreams(context.Context, *emptypb.Empty) (*ListStreamsResponse, error)
 }
 
-// UnimplementedEchoServiceServer should be embedded to have forward compatible implementations.
-type UnimplementedEchoServiceServer struct {
+// UnimplementedStreamServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedStreamServiceServer struct {
 }
 
-func (UnimplementedEchoServiceServer) Echo(context.Context, *EchoRequest) (*EchoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
+func (UnimplementedStreamServiceServer) ListStreams(context.Context, *emptypb.Empty) (*ListStreamsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListStreams not implemented")
 }
 
-// UnsafeEchoServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EchoServiceServer will
+// UnsafeStreamServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StreamServiceServer will
 // result in compilation errors.
-type UnsafeEchoServiceServer interface {
-	mustEmbedUnimplementedEchoServiceServer()
+type UnsafeStreamServiceServer interface {
+	mustEmbedUnimplementedStreamServiceServer()
 }
 
-func RegisterEchoServiceServer(s grpc.ServiceRegistrar, srv EchoServiceServer) {
-	s.RegisterService(&EchoService_ServiceDesc, srv)
+func RegisterStreamServiceServer(s grpc.ServiceRegistrar, srv StreamServiceServer) {
+	s.RegisterService(&StreamService_ServiceDesc, srv)
 }
 
-func _EchoService_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EchoRequest)
+func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EchoServiceServer).Echo(ctx, in)
+		return srv.(StreamServiceServer).ListStreams(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.stream.v1.EchoService/Echo",
+		FullMethod: "/api.stream.v1.StreamService/ListStreams",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EchoServiceServer).Echo(ctx, req.(*EchoRequest))
+		return srv.(StreamServiceServer).ListStreams(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// EchoService_ServiceDesc is the grpc.ServiceDesc for EchoService service.
+// StreamService_ServiceDesc is the grpc.ServiceDesc for StreamService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var EchoService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.stream.v1.EchoService",
-	HandlerType: (*EchoServiceServer)(nil),
+var StreamService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.stream.v1.StreamService",
+	HandlerType: (*StreamServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Echo",
-			Handler:    _EchoService_Echo_Handler,
+			MethodName: "ListStreams",
+			Handler:    _StreamService_ListStreams_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -6,7 +6,7 @@
   },
   "tags": [
     {
-      "name": "EchoService"
+      "name": "StreamService"
     }
   ],
   "consumes": [
@@ -16,15 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/echo": {
+    "/api/v1/streams": {
       "get": {
-        "summary": "Echo procedure example",
-        "operationId": "EchoService_Echo",
+        "operationId": "StreamService_ListStreams",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1EchoResponse"
+              "$ref": "#/definitions/v1ListStreamsResponse"
             }
           },
           "default": {
@@ -34,16 +33,8 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "value",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
         "tags": [
-          "EchoService"
+          "StreamService"
         ]
       }
     }
@@ -77,14 +68,20 @@
         }
       }
     },
-    "v1EchoResponse": {
+    "v1ListStreamsResponse": {
       "type": "object",
       "properties": {
-        "value": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "username": {
           "type": "string"
         }
-      },
-      "title": "Response model example"
+      }
     }
   }
 }

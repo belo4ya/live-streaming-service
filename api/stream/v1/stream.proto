@@ -3,23 +3,18 @@ syntax = "proto3";
 package api.stream.v1;
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 
 option go_package = "api/stream/v1;v1";
 
-// Request model example
-message EchoRequest {
-  string value = 1;
+message ListStreamsResponse {
+  int64 id = 1;
+  string name = 2;
+  string username = 3;
 }
 
-// Response model example
-message EchoResponse {
-  string value = 1;
-}
-
-// Echo service example
-service EchoService {
-  // Echo procedure example
-  rpc Echo(EchoRequest) returns (EchoResponse) {
-    option (google.api.http) = {get: "/api/v1/echo"};
+service StreamService {
+  rpc ListStreams(google.protobuf.Empty) returns (ListStreamsResponse) {
+    option (google.api.http) = {get: "/api/v1/streams"};
   }
 }
