@@ -15,11 +15,11 @@ service VODService {
 }
 
 message ListVODsResponse {
-  message Stream {
+  message VOD {
     int64 id = 1;
     string name = 2;
     string username = 3;
     google.protobuf.Timestamp created_at = 4;
   }
-  repeated Stream results = 1;
+  repeated VOD results = 1;
 }

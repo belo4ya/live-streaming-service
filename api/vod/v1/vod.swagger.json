@@ -40,7 +40,7 @@
     }
   },
   "definitions": {
-    "ListVODsResponseStream": {
+    "ListVODsResponseVOD": {
       "type": "object",
       "properties": {
         "id": {
@@ -94,7 +94,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/ListVODsResponseStream"
+            "$ref": "#/definitions/ListVODsResponseVOD"
           }
         }
       }
