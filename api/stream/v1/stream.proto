@@ -1,13 +1,20 @@
 syntax = "proto3";
 
+// buf:lint:ignore PACKAGE_DIRECTORY_MATCH
 package stream.v1;
+
+import "google/api/annotations.proto";
 
 option go_package = "api/stream/v1;v1";
 
-message Message {
+message EchoRequest {
+  string value = 1;
+}
+
+message EchoResponse {
   string value = 1;
 }
 
 service EchoService {
-  rpc Echo(Message) returns (Message) {}
+  rpc Echo(EchoRequest) returns (EchoResponse) {}
 }

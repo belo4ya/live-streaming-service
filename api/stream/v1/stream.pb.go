@@ -4,9 +4,12 @@
 // 	protoc        (unknown)
 // source: api/stream/v1/stream.proto
 
+// buf:lint:ignore PACKAGE_DIRECTORY_MATCH
+
 package v1
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -20,7 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Message struct {
+type EchoRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -28,8 +31,8 @@ type Message struct {
 	Value string `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
 }
 
-func (x *Message) Reset() {
-	*x = Message{}
+func (x *EchoRequest) Reset() {
+	*x = EchoRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_stream_v1_stream_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -37,13 +40,13 @@ func (x *Message) Reset() {
 	}
 }
 
-func (x *Message) String() string {
+func (x *EchoRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Message) ProtoMessage() {}
+func (*EchoRequest) ProtoMessage() {}
 
-func (x *Message) ProtoReflect() protoreflect.Message {
+func (x *EchoRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_stream_v1_stream_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,12 +58,59 @@ func (x *Message) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Message.ProtoReflect.Descriptor instead.
-func (*Message) Descriptor() ([]byte, []int) {
+// Deprecated: Use EchoRequest.ProtoReflect.Descriptor instead.
+func (*EchoRequest) Descriptor() ([]byte, []int) {
 	return file_api_stream_v1_stream_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetValue() string {
+func (x *EchoRequest) GetValue() string {
+	if x != nil {
+		return x.Value
+	}
+	return ""
+}
+
+type EchoResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Value string `protobuf:"bytes,1,opt,name=value,proto3" json:"value,omitempty"`
+}
+
+func (x *EchoResponse) Reset() {
+	*x = EchoResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_stream_v1_stream_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EchoResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EchoResponse) ProtoMessage() {}
+
+func (x *EchoResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_api_stream_v1_stream_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EchoResponse.ProtoReflect.Descriptor instead.
+func (*EchoResponse) Descriptor() ([]byte, []int) {
+	return file_api_stream_v1_stream_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *EchoResponse) GetValue() string {
 	if x != nil {
 		return x.Value
 	}
@@ -72,15 +122,20 @@ var File_api_stream_v1_stream_proto protoreflect.FileDescriptor
 var file_api_stream_v1_stream_proto_rawDesc = []byte{
 	0x0a, 0x1a, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x76, 0x31, 0x2f,
 	0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x09, 0x73, 0x74,
-	0x72, 0x65, 0x61, 0x6d, 0x2e, 0x76, 0x31, 0x22, 0x1f, 0x0a, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x32, 0x3f, 0x0a, 0x0b, 0x45, 0x63, 0x68, 0x6f,
-	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x30, 0x0a, 0x04, 0x45, 0x63, 0x68, 0x6f, 0x12,
-	0x12, 0x2e, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x73, 0x73,
-	0x61, 0x67, 0x65, 0x1a, 0x12, 0x2e, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2e, 0x76, 0x31, 0x2e,
-	0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x00, 0x42, 0x12, 0x5a, 0x10, 0x61, 0x70, 0x69,
-	0x2f, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x72, 0x65, 0x61, 0x6d, 0x2e, 0x76, 0x31, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f,
+	0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x23, 0x0a, 0x0b, 0x45, 0x63, 0x68, 0x6f, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x24, 0x0a, 0x0c, 0x45, 0x63,
+	0x68, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x32, 0x48, 0x0a, 0x0b, 0x45, 0x63, 0x68, 0x6f, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12,
+	0x39, 0x0a, 0x04, 0x45, 0x63, 0x68, 0x6f, 0x12, 0x16, 0x2e, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d,
+	0x2e, 0x76, 0x31, 0x2e, 0x45, 0x63, 0x68, 0x6f, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x17, 0x2e, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x63, 0x68, 0x6f,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x12, 0x5a, 0x10, 0x61, 0x70,
+	0x69, 0x2f, 0x73, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -95,13 +150,14 @@ func file_api_stream_v1_stream_proto_rawDescGZIP() []byte {
 	return file_api_stream_v1_stream_proto_rawDescData
 }
 
-var file_api_stream_v1_stream_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_api_stream_v1_stream_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_api_stream_v1_stream_proto_goTypes = []interface{}{
-	(*Message)(nil), // 0: stream.v1.Message
+	(*EchoRequest)(nil),  // 0: stream.v1.EchoRequest
+	(*EchoResponse)(nil), // 1: stream.v1.EchoResponse
 }
 var file_api_stream_v1_stream_proto_depIdxs = []int32{
-	0, // 0: stream.v1.EchoService.Echo:input_type -> stream.v1.Message
-	0, // 1: stream.v1.EchoService.Echo:output_type -> stream.v1.Message
+	0, // 0: stream.v1.EchoService.Echo:input_type -> stream.v1.EchoRequest
+	1, // 1: stream.v1.EchoService.Echo:output_type -> stream.v1.EchoResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -116,7 +172,19 @@ func file_api_stream_v1_stream_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_api_stream_v1_stream_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message); i {
+			switch v := v.(*EchoRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_stream_v1_stream_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EchoResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -134,7 +202,7 @@ func file_api_stream_v1_stream_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_stream_v1_stream_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
