@@ -4,7 +4,7 @@ set -e
 
 SWAGGER_UI_VERSION="v4.15.5"
 SWAGGER_UI_GIT="https://github.com/swagger-api/swagger-ui.git"
-SWAGGER_DIR="./swagger"
+SWAGGER_DIR="./swagger-ui"
 CACHE_DIR="./.cache/swagger-ui/$SWAGGER_UI_VERSION"
 OPENAPI_DIR="../api"
 
