@@ -1,20 +1,25 @@
 syntax = "proto3";
 
-// buf:lint:ignore PACKAGE_DIRECTORY_MATCH
-package stream.v1;
+package api.stream.v1;
 
 import "google/api/annotations.proto";
 
 option go_package = "api/stream/v1;v1";
 
+// Request model example
 message EchoRequest {
   string value = 1;
 }
 
+// Response model example
 message EchoResponse {
   string value = 1;
 }
 
+// Echo service example
 service EchoService {
-  rpc Echo(EchoRequest) returns (EchoResponse) {}
+  // Echo procedure example
+  rpc Echo(EchoRequest) returns (EchoResponse) {
+    option (google.api.http) = {get: "/v1/echo"};
+  }
 }

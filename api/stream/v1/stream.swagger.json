@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "buf:lint:ignore PACKAGE_DIRECTORY_MATCH",
+    "title": "api/stream/v1/stream.proto",
     "version": "version not set"
   },
   "tags": [
@@ -15,7 +15,39 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/echo": {
+      "get": {
+        "summary": "Echo procedure example",
+        "operationId": "EchoService_Echo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1EchoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "value",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "EchoService"
+        ]
+      }
+    }
+  },
   "definitions": {
     "protobufAny": {
       "type": "object",
@@ -51,7 +83,8 @@
         "value": {
           "type": "string"
         }
-      }
+      },
+      "title": "Response model example"
     }
   }
 }

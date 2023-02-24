@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EchoServiceClient interface {
+	// Echo procedure example
 	Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
 }
 
@@ -35,7 +36,7 @@ func NewEchoServiceClient(cc grpc.ClientConnInterface) EchoServiceClient {
 
 func (c *echoServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
 	out := new(EchoResponse)
-	err := c.cc.Invoke(ctx, "/stream.v1.EchoService/Echo", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/api.stream.v1.EchoService/Echo", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,6 +47,7 @@ func (c *echoServiceClient) Echo(ctx context.Context, in *EchoRequest, opts ...g
 // All implementations must embed UnimplementedEchoServiceServer
 // for forward compatibility
 type EchoServiceServer interface {
+	// Echo procedure example
 	Echo(context.Context, *EchoRequest) (*EchoResponse, error)
 	mustEmbedUnimplementedEchoServiceServer()
 }
@@ -80,7 +82,7 @@ func _EchoService_Echo_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/stream.v1.EchoService/Echo",
+		FullMethod: "/api.stream.v1.EchoService/Echo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(EchoServiceServer).Echo(ctx, req.(*EchoRequest))
@@ -92,7 +94,7 @@ func _EchoService_Echo_Handler(srv interface{}, ctx context.Context, dec func(in
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EchoService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "stream.v1.EchoService",
+	ServiceName: "api.stream.v1.EchoService",
 	HandlerType: (*EchoServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
