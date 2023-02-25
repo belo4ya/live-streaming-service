@@ -4,5 +4,5 @@ import (
 	"embed"
 )
 
-//go:embed swagger/*
-var OpenAPI embed.FS
+//go:embed swagger-ui
+var SwaggerUI embed.FS

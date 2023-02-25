@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/echo": {
+    "/api/v1/echo": {
       "get": {
         "summary": "Echo procedure example",
         "operationId": "EchoService_Echo",

@@ -81,7 +81,7 @@ func RegisterEchoServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.stream.v1.EchoService/Echo", runtime.WithHTTPPathPattern("/v1/echo"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.stream.v1.EchoService/Echo", runtime.WithHTTPPathPattern("/api/v1/echo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -145,7 +145,7 @@ func RegisterEchoServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.stream.v1.EchoService/Echo", runtime.WithHTTPPathPattern("/v1/echo"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.stream.v1.EchoService/Echo", runtime.WithHTTPPathPattern("/api/v1/echo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -165,7 +165,7 @@ func RegisterEchoServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux
 }
 
 var (
-	pattern_EchoService_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "echo"}, ""))
+	pattern_EchoService_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "echo"}, ""))
 )
 
 var (

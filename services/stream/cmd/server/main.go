@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"github.com/belo4ya/live-streaming-service/api/stream/v1"
+	"github.com/belo4ya/live-streaming-service/third_party"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -52,6 +54,8 @@ func main() {
 		log.Fatalln("Failed to dial server:", err)
 	}
 
+	mux := http.NewServeMux()
+
 	gwmux := runtime.NewServeMux()
 	// Register Greeter
 	err = v1.RegisterEchoServiceHandler(context.Background(), gwmux, conn)
@@ -59,9 +63,17 @@ func main() {
 		log.Fatalln("Failed to register gateway:", err)
 	}
 
+	mux.Handle("/", gwmux)
+	mux.HandleFunc("/doc/openapi.json", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(v1.OpenAPISpec)
+	})
+	subFs, _ := fs.Sub(third_party.SwaggerUI, "swagger-ui")
+	mux.Handle("/doc/swagger-ui/", http.StripPrefix("/doc/swagger-ui", http.FileServer(http.FS(subFs))))
+
 	gwServer := &http.Server{
 		Addr:    ":8090",
-		Handler: gwmux,
+		Handler: mux,
 	}
 
 	log.Println("Serving gRPC-Gateway on http://0.0.0.0:8090")

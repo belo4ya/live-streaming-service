@@ -20,6 +20,6 @@ message EchoResponse {
 service EchoService {
   // Echo procedure example
   rpc Echo(EchoRequest) returns (EchoResponse) {
-    option (google.api.http) = {get: "/v1/echo"};
+    option (google.api.http) = {get: "/api/v1/echo"};
   }
 }

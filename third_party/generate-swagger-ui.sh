@@ -27,7 +27,7 @@ tmp="    urls: ["
 for i in $(find "$OPENAPI_DIR" -name "*.swagger.json"); do
   escaped_proto_dir="$(escape_str "$OPENAPI_DIR/")"
   path="$(echo $i | sed -e "s/escaped_proto_dir//g")"
-  tmp="$tmp{\"url\":\"$path\",\"name\":\"$path\"},"
+  tmp="$tmp{\"url\":\"../$path\",\"name\":\"$path\"},"
 done
 # delete last characters from $tmp
 tmp=$(echo "$tmp" | sed 's/.$//')
