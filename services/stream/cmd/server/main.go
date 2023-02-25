@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"io/fs"
 	"log"
+	"mime"
 	"net"
 	"net/http"
 )
@@ -25,6 +26,17 @@ func (s *Server) Echo(_ context.Context, req *v1.EchoRequest) (*v1.EchoResponse,
 	return &v1.EchoResponse{Value: req.Value}, nil
 }
 
+func RegisterDocHandler(mux *http.ServeMux, openAPISpec []byte) {
+	mux.HandleFunc("/doc/openapi.json", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(openAPISpec)
+	})
+
+	mime.AddExtensionType(".svg", "image/svg+xml")
+	subFs, _ := fs.Sub(third_party.SwaggerUI, "swagger-ui")
+	mux.Handle("/doc/swagger-ui/", http.StripPrefix("/doc/swagger-ui", http.FileServer(http.FS(subFs))))
+}
+
 func main() {
 	// Create a listener on TCP port
 	lis, err := net.Listen("tcp", ":8080")
@@ -33,15 +45,18 @@ func main() {
 	}
 
 	// Create a gRPC server object
-	s := grpc.NewServer()
+	grpcSrv := grpc.NewServer()
 	// Attach the Greeter service to the server
-	v1.RegisterEchoServiceServer(s, NewServer())
+	v1.RegisterEchoServiceServer(grpcSrv, NewServer())
 	// Serve gRPC server
 	log.Println("Serving gRPC on 0.0.0.0:8080")
 	go func() {
-		log.Fatalln(s.Serve(lis))
+		log.Fatalln(grpcSrv.Serve(lis))
 	}()
 
+	mux := http.NewServeMux()
+
+	gw := runtime.NewServeMux()
 	// Create a client connection to the gRPC server we just started
 	// This is where the gRPC-Gateway proxies the requests
 	conn, err := grpc.DialContext(
@@ -53,29 +68,19 @@ func main() {
 	if err != nil {
 		log.Fatalln("Failed to dial server:", err)
 	}
-
-	mux := http.NewServeMux()
-
-	gwmux := runtime.NewServeMux()
 	// Register Greeter
-	err = v1.RegisterEchoServiceHandler(context.Background(), gwmux, conn)
+	err = v1.RegisterEchoServiceHandler(context.Background(), gw, conn)
 	if err != nil {
 		log.Fatalln("Failed to register gateway:", err)
 	}
+	mux.Handle("/", gw)
+	RegisterDocHandler(mux, v1.OpenAPISpec)
 
-	mux.Handle("/", gwmux)
-	mux.HandleFunc("/doc/openapi.json", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(v1.OpenAPISpec)
-	})
-	subFs, _ := fs.Sub(third_party.SwaggerUI, "swagger-ui")
-	mux.Handle("/doc/swagger-ui/", http.StripPrefix("/doc/swagger-ui", http.FileServer(http.FS(subFs))))
-
-	gwServer := &http.Server{
+	gwSrv := &http.Server{
 		Addr:    ":8090",
 		Handler: mux,
 	}
 
 	log.Println("Serving gRPC-Gateway on http://0.0.0.0:8090")
-	log.Fatalln(gwServer.ListenAndServe())
+	log.Fatalln(gwSrv.ListenAndServe())
 }
