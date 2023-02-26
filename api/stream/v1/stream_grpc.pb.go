@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             (unknown)
-// source: api/stream/v1/stream.proto
+// source: stream/v1/stream.proto
 
 package v1
 
@@ -36,7 +36,7 @@ func NewStreamServiceClient(cc grpc.ClientConnInterface) StreamServiceClient {
 
 func (c *streamServiceClient) ListStreams(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListStreamsResponse, error) {
 	out := new(ListStreamsResponse)
-	err := c.cc.Invoke(ctx, "/api.stream.v1.StreamService/ListStreams", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/stream.v1.StreamService/ListStreams", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -44,19 +44,21 @@ func (c *streamServiceClient) ListStreams(ctx context.Context, in *emptypb.Empty
 }
 
 // StreamServiceServer is the server API for StreamService service.
-// All implementations should embed UnimplementedStreamServiceServer
+// All implementations must embed UnimplementedStreamServiceServer
 // for forward compatibility
 type StreamServiceServer interface {
 	ListStreams(context.Context, *emptypb.Empty) (*ListStreamsResponse, error)
+	mustEmbedUnimplementedStreamServiceServer()
 }
 
-// UnimplementedStreamServiceServer should be embedded to have forward compatible implementations.
+// UnimplementedStreamServiceServer must be embedded to have forward compatible implementations.
 type UnimplementedStreamServiceServer struct {
 }
 
 func (UnimplementedStreamServiceServer) ListStreams(context.Context, *emptypb.Empty) (*ListStreamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListStreams not implemented")
 }
+func (UnimplementedStreamServiceServer) mustEmbedUnimplementedStreamServiceServer() {}
 
 // UnsafeStreamServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to StreamServiceServer will
@@ -79,7 +81,7 @@ func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.stream.v1.StreamService/ListStreams",
+		FullMethod: "/stream.v1.StreamService/ListStreams",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(StreamServiceServer).ListStreams(ctx, req.(*emptypb.Empty))
@@ -91,7 +93,7 @@ func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var StreamService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.stream.v1.StreamService",
+	ServiceName: "stream.v1.StreamService",
 	HandlerType: (*StreamServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -100,5 +102,5 @@ var StreamService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/stream/v1/stream.proto",
+	Metadata: "stream/v1/stream.proto",
 }

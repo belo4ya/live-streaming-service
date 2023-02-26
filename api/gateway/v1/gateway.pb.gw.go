@@ -82,7 +82,7 @@ func RegisterStreamServiceHandlerServer(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.gateway.v1.StreamService/ListStreams", runtime.WithHTTPPathPattern("/api/v1/streams"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/gateway.v1.StreamService/ListStreams", runtime.WithHTTPPathPattern("/api/v1/streams"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -116,7 +116,7 @@ func RegisterVODServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/api.gateway.v1.VODService/ListVODs", runtime.WithHTTPPathPattern("/api/v1/vods"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/gateway.v1.VODService/ListVODs", runtime.WithHTTPPathPattern("/api/v1/vods"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -180,7 +180,7 @@ func RegisterStreamServiceHandlerClient(ctx context.Context, mux *runtime.ServeM
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.gateway.v1.StreamService/ListStreams", runtime.WithHTTPPathPattern("/api/v1/streams"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/gateway.v1.StreamService/ListStreams", runtime.WithHTTPPathPattern("/api/v1/streams"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -251,7 +251,7 @@ func RegisterVODServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/api.gateway.v1.VODService/ListVODs", runtime.WithHTTPPathPattern("/api/v1/vods"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/gateway.v1.VODService/ListVODs", runtime.WithHTTPPathPattern("/api/v1/vods"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

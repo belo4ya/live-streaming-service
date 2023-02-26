@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package api.stream.v1;
+package stream.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
-option go_package = "api/stream/v1;v1";
+option go_package = "stream/v1;v1";
 
 service StreamService {
   rpc ListStreams(google.protobuf.Empty) returns (ListStreamsResponse) {

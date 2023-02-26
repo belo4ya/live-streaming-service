@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "api/stream/v1/stream.proto",
+    "title": "stream/v1/stream.proto",
     "version": "version not set"
   },
   "tags": [

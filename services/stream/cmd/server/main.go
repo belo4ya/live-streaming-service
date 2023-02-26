@@ -7,6 +7,6 @@ import (
 
 func main() {
 	s := service.NewService()
-	srv := server.NewServer(s, "localhost:8090", "localhost:8080")
+	srv := server.NewServer(s, "localhost:8091", "localhost:8081")
 	srv.RunServer()
 }

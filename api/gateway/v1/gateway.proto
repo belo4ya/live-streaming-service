@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-package api.gateway.v1;
+package gateway.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "api/gateway/v1;v1";
+option go_package = "gateway/v1;v1";
 
 // *************************************** STREAM SERVICE ***************************************
 

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             (unknown)
-// source: api/vod/v1/vod.proto
+// source: vod/v1/vod.proto
 
 package v1
 
@@ -36,7 +36,7 @@ func NewVODServiceClient(cc grpc.ClientConnInterface) VODServiceClient {
 
 func (c *vODServiceClient) ListVODs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListVODsResponse, error) {
 	out := new(ListVODsResponse)
-	err := c.cc.Invoke(ctx, "/api.vod.v1.VODService/ListVODs", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/vod.v1.VODService/ListVODs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -44,19 +44,21 @@ func (c *vODServiceClient) ListVODs(ctx context.Context, in *emptypb.Empty, opts
 }
 
 // VODServiceServer is the server API for VODService service.
-// All implementations should embed UnimplementedVODServiceServer
+// All implementations must embed UnimplementedVODServiceServer
 // for forward compatibility
 type VODServiceServer interface {
 	ListVODs(context.Context, *emptypb.Empty) (*ListVODsResponse, error)
+	mustEmbedUnimplementedVODServiceServer()
 }
 
-// UnimplementedVODServiceServer should be embedded to have forward compatible implementations.
+// UnimplementedVODServiceServer must be embedded to have forward compatible implementations.
 type UnimplementedVODServiceServer struct {
 }
 
 func (UnimplementedVODServiceServer) ListVODs(context.Context, *emptypb.Empty) (*ListVODsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListVODs not implemented")
 }
+func (UnimplementedVODServiceServer) mustEmbedUnimplementedVODServiceServer() {}
 
 // UnsafeVODServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to VODServiceServer will
@@ -79,7 +81,7 @@ func _VODService_ListVODs_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.vod.v1.VODService/ListVODs",
+		FullMethod: "/vod.v1.VODService/ListVODs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VODServiceServer).ListVODs(ctx, req.(*emptypb.Empty))
@@ -91,7 +93,7 @@ func _VODService_ListVODs_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var VODService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.vod.v1.VODService",
+	ServiceName: "vod.v1.VODService",
 	HandlerType: (*VODServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -100,5 +102,5 @@ var VODService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/vod/v1/vod.proto",
+	Metadata: "vod/v1/vod.proto",
 }

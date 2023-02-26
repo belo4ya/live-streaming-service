@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "api/vod/v1/vod.proto",
+    "title": "vod/v1/vod.proto",
     "version": "version not set"
   },
   "tags": [

@@ -36,7 +36,7 @@ func NewStreamServiceClient(cc grpc.ClientConnInterface) StreamServiceClient {
 
 func (c *streamServiceClient) ListStreams(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListStreamsResponse, error) {
 	out := new(ListStreamsResponse)
-	err := c.cc.Invoke(ctx, "/api.gateway.v1.StreamService/ListStreams", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gateway.v1.StreamService/ListStreams", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.gateway.v1.StreamService/ListStreams",
+		FullMethod: "/gateway.v1.StreamService/ListStreams",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(StreamServiceServer).ListStreams(ctx, req.(*emptypb.Empty))
@@ -93,7 +93,7 @@ func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var StreamService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.gateway.v1.StreamService",
+	ServiceName: "gateway.v1.StreamService",
 	HandlerType: (*StreamServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -122,7 +122,7 @@ func NewVODServiceClient(cc grpc.ClientConnInterface) VODServiceClient {
 
 func (c *vODServiceClient) ListVODs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListVODsResponse, error) {
 	out := new(ListVODsResponse)
-	err := c.cc.Invoke(ctx, "/api.gateway.v1.VODService/ListVODs", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/gateway.v1.VODService/ListVODs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func _VODService_ListVODs_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/api.gateway.v1.VODService/ListVODs",
+		FullMethod: "/gateway.v1.VODService/ListVODs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(VODServiceServer).ListVODs(ctx, req.(*emptypb.Empty))
@@ -179,7 +179,7 @@ func _VODService_ListVODs_Handler(srv interface{}, ctx context.Context, dec func
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var VODService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.gateway.v1.VODService",
+	ServiceName: "gateway.v1.VODService",
 	HandlerType: (*VODServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
