@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/conf"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
@@ -11,14 +12,11 @@ import (
 	"os"
 )
 
-// go build -ldflags "-X main.Name=stream -X main.Version=x.y.z"
+// go build -ldflags "-X main.Version=0.0.1 -X main.Name=stream"
 var (
-	// Name is the name of the compiled software.
-	Name = "stream"
-	// Version is the version of the compiled software.
-	Version = "v1.0.0"
-
-	id, _ = os.Hostname()
+	Version = "0.0.1"
+	Name    = "stream"
+	id, _   = os.Hostname()
 )
 
 func newApp(logger log.Logger, srv *grpc.Server) *kratos.App {
@@ -33,39 +31,46 @@ func newApp(logger log.Logger, srv *grpc.Server) *kratos.App {
 }
 
 func main() {
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace.id", tracing.TraceID(),
-		"span.id", tracing.SpanID(),
+	var confPath string
+	flag.StringVar(
+		&confPath,
+		"conf",
+		"../../configs/config.yaml",
+		"config path, eg: --conf config.yaml",
 	)
+	flag.Parse()
 
 	c := config.New(
 		config.WithSource(
-			file.NewSource("/Users/aikovalev/My/github/live-streaming-service/services/stream/configs/config.yaml"),
+			file.NewSource(confPath),
 		),
 	)
 	defer c.Close()
 
+	var b conf.Bootstrap
 	if err := c.Load(); err != nil {
 		panic(err)
 	}
-
-	var bc conf.Bootstrap
-	if err := c.Scan(&bc); err != nil {
+	if err := c.Scan(&b); err != nil {
 		panic(err)
 	}
-	logger.Log(log.LevelInfo, "bootstrap", bc.Server.Addr)
-	app, cleanup, err := wireApp(bc.Server, logger)
+
+	logger := log.With(log.NewStdLogger(os.Stdout),
+		"ts", log.DefaultTimestamp,
+		"svc.id", id,
+		"svc.name", Name,
+		"svc.version", Version,
+		"caller", log.DefaultCaller,
+		"trace.id", tracing.TraceID(),
+		"span.id", tracing.SpanID(),
+	)
+
+	app, cleanup, err := wireApp(b.Server, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
 
-	// start and wait for stop signal
 	if err := app.Run(); err != nil {
 		panic(err)
 	}

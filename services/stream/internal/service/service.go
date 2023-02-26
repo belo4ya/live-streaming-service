@@ -16,7 +16,7 @@ type Service struct {
 }
 
 func NewService(l log.Logger) *Service {
-	return &Service{log: log.NewHelper(log.With(l, "module", "service/service"))}
+	return &Service{log: log.NewHelper(l)}
 }
 
 func (s *Service) ListStreams(_ context.Context, _ *empty.Empty) (*v1.ListStreamsResponse, error) {
