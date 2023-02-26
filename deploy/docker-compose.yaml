@@ -114,3 +114,12 @@ services:
     container_name: flog
     image: mingrammer/flog
     command: "-f json -d 0.5s -l"
+
+  srs:
+    container_name: srs
+    image: ossrs/srs:latest
+    command: "./objs/srs -c conf/docker.conf"
+    ports:
+      - "1935:1935"
+      - "1985:1985"
+      - "8080:8080"
