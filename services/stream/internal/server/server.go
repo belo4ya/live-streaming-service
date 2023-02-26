@@ -2,28 +2,23 @@ package server
 
 import (
 	v1 "github.com/belo4ya/live-streaming-service/api/stream/v1"
+	"github.com/belo4ya/live-streaming-service/services/stream/internal/conf"
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/service"
-	"google.golang.org/grpc"
-	"log"
-	"net"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/google/wire"
 )
 
-type Server struct {
-	grpc *grpc.Server
-	addr string
-}
+var ProviderSet = wire.NewSet(NewServer)
 
-func New(s *service.Service, addr string) *Server {
-	srv := grpc.NewServer()
-	v1.RegisterStreamServiceServer(srv, s)
-	return &Server{srv, addr}
-}
-
-func (srv *Server) Run() error {
-	lis, err := net.Listen("tcp", srv.addr)
-	if err != nil {
-		return err
+func NewServer(c *conf.Server, s *service.Service) *grpc.Server {
+	var opts = []grpc.ServerOption{
+		grpc.Middleware(
+			recovery.Recovery(),
+		),
 	}
-	log.Printf("Serving gRPC on %s\n", srv.addr)
-	return srv.grpc.Serve(lis)
+	opts = append(opts, grpc.Address(c.Addr))
+	srv := grpc.NewServer(opts...)
+	v1.RegisterStreamServiceServer(srv, s)
+	return srv
 }

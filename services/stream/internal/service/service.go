@@ -3,17 +3,20 @@ package service
 import (
 	"context"
 	v1 "github.com/belo4ya/live-streaming-service/api/stream/v1"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang/protobuf/ptypes/empty"
-	"go.uber.org/zap"
+	"github.com/google/wire"
 )
+
+var ProviderSet = wire.NewSet(NewService)
 
 type Service struct {
 	v1.UnimplementedStreamServiceServer
-	log *zap.SugaredLogger
+	log *log.Helper
 }
 
-func NewService(log *zap.SugaredLogger) *Service {
-	return &Service{log: log}
+func NewService(l log.Logger) *Service {
+	return &Service{log: log.NewHelper(log.With(l, "module", "service/service"))}
 }
 
 func (s *Service) ListStreams(_ context.Context, _ *empty.Empty) (*v1.ListStreamsResponse, error) {
