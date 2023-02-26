@@ -17,7 +17,7 @@ func NewServer(grpcAddr string, httpAddr string, streamSvc *service.StreamServic
 	return &Server{grpcSrv, httpSrv}
 }
 
-func (srv *Server) RunServer() {
+func (srv *Server) Run() {
 	log.Printf("Serving gRPC on %s\n", srv.grpc.addr)
 	err := srv.grpc.Run()
 	if err != nil {

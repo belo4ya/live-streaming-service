@@ -3,38 +3,36 @@ package service
 import (
 	"context"
 	v1 "github.com/belo4ya/live-streaming-service/api/gateway/v1"
+	vodv1 "github.com/belo4ya/live-streaming-service/api/vod/v1"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/golang/protobuf/ptypes/timestamp"
 )
 
 type VODService struct {
 	v1.UnimplementedVODServiceServer
+	c vodv1.VODServiceClient
 }
 
-func NewVODService() *VODService {
-	return &VODService{}
+func NewVODService(c vodv1.VODServiceClient) *VODService {
+	return &VODService{c: c}
 }
 
-func (s *VODService) ListVODs(_ context.Context, _ *empty.Empty) (*v1.ListVODsResponse, error) {
-	results := []*v1.ListVODsResponse_VOD{
-		{
-			Id:        1,
-			Name:      "Stream 1",
-			Username:  "Streamer 1",
-			CreatedAt: &timestamp.Timestamp{},
-		},
-		{
-			Id:        2,
-			Name:      "Stream 2",
-			Username:  "Streamer 2",
-			CreatedAt: &timestamp.Timestamp{},
-		},
-		{
-			Id:        3,
-			Name:      "Stream 3",
-			Username:  "Streamer 3",
-			CreatedAt: &timestamp.Timestamp{},
-		},
+func (s *VODService) ListVODs(ctx context.Context, req *empty.Empty) (*v1.ListVODsResponse, error) {
+	r, err := s.c.ListVODs(ctx, req)
+	if err != nil {
+		return nil, err
 	}
-	return &v1.ListVODsResponse{Results: results}, nil
+
+	resp := &v1.ListVODsResponse{
+		Results: make([]*v1.ListVODsResponse_VOD, 0),
+	}
+	for _, r := range r.Results {
+		res := &v1.ListVODsResponse_VOD{
+			Id:        r.Id,
+			Name:      r.Name,
+			Username:  r.Username,
+			CreatedAt: r.CreatedAt,
+		}
+		resp.Results = append(resp.Results, res)
+	}
+	return resp, nil
 }

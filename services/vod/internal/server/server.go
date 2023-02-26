@@ -1,29 +1,29 @@
 package server
 
 import (
+	v1 "github.com/belo4ya/live-streaming-service/api/vod/v1"
 	"github.com/belo4ya/live-streaming-service/services/vod/internal/service"
+	"google.golang.org/grpc"
 	"log"
-	"net/http"
+	"net"
 )
 
 type Server struct {
-	grpc *GRPCServer
-	http *http.Server
+	grpc *grpc.Server
+	addr string
 }
 
-func NewServer(s *service.Service, grpcAddr string, httpAddr string) *Server {
-	grpcSrv := NewGRPCServer(s, grpcAddr)
-	httpSrv := NewHTTPServer(httpAddr, grpcAddr)
-	return &Server{grpcSrv, httpSrv}
+func New(s *service.Service, addr string) *Server {
+	srv := grpc.NewServer()
+	v1.RegisterVODServiceServer(srv, s)
+	return &Server{srv, addr}
 }
 
-func (srv *Server) RunServer() {
-	log.Printf("Serving gRPC on %s\n", srv.grpc.addr)
-	err := srv.grpc.Run()
+func (srv *Server) Run() error {
+	lis, err := net.Listen("tcp", srv.addr)
 	if err != nil {
-		log.Fatalln("Failed to listen:", err)
+		return err
 	}
-
-	log.Printf("Serving gRPC-Gateway on %s\n", srv.http.Addr)
-	log.Fatalln(srv.http.ListenAndServe())
+	log.Printf("Serving gRPC on %s\n", srv.addr)
+	return srv.grpc.Serve(lis)
 }

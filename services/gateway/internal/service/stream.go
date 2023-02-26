@@ -3,34 +3,35 @@ package service
 import (
 	"context"
 	v1 "github.com/belo4ya/live-streaming-service/api/gateway/v1"
+	streamv1 "github.com/belo4ya/live-streaming-service/api/stream/v1"
 	"github.com/golang/protobuf/ptypes/empty"
 )
 
 type StreamService struct {
 	v1.UnimplementedStreamServiceServer
+	c streamv1.StreamServiceClient
 }
 
-func NewStreamService() *StreamService {
-	return &StreamService{}
+func NewStreamService(c streamv1.StreamServiceClient) *StreamService {
+	return &StreamService{c: c}
 }
 
-func (s *StreamService) ListStreams(_ context.Context, _ *empty.Empty) (*v1.ListStreamsResponse, error) {
-	results := []*v1.ListStreamsResponse_Stream{
-		{
-			Id:       1,
-			Name:     "Stream 1",
-			Username: "Streamer 1",
-		},
-		{
-			Id:       2,
-			Name:     "Stream 2",
-			Username: "Streamer 2",
-		},
-		{
-			Id:       3,
-			Name:     "Stream 3",
-			Username: "Streamer 3",
-		},
+func (s *StreamService) ListStreams(ctx context.Context, req *empty.Empty) (*v1.ListStreamsResponse, error) {
+	r, err := s.c.ListStreams(ctx, req)
+	if err != nil {
+		return nil, err
 	}
-	return &v1.ListStreamsResponse{Results: results}, nil
+
+	resp := &v1.ListStreamsResponse{
+		Results: make([]*v1.ListStreamsResponse_Stream, 0),
+	}
+	for _, r := range r.Results {
+		res := &v1.ListStreamsResponse_Stream{
+			Id:       r.Id,
+			Name:     r.Name,
+			Username: r.Username,
+		}
+		resp.Results = append(resp.Results, res)
+	}
+	return &v1.ListStreamsResponse{Results: resp.Results}, nil
 }
