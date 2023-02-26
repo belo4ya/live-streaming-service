@@ -8,4 +8,3 @@ lint:
     - DEFAULT
   allow_comment_ignores: true
   rpc_allow_google_protobuf_empty_requests: true
-

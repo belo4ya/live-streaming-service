@@ -5,7 +5,7 @@ plugins:
     opt: paths=source_relative
   - plugin: go-grpc
     out: .
-    opt: paths=source_relative,require_unimplemented_servers=false
+    opt: paths=source_relative
   - plugin: grpc-gateway
     out: .
     opt: paths=source_relative
