@@ -9,6 +9,7 @@ gateway:
 	buf generate --template buf.gen.gw.yaml --path api/gateway
 
 .PHONY: all
+# generate all
 all: services gateway
 
 # show help
