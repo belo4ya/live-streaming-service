@@ -4,14 +4,16 @@ import (
 	"context"
 	v1 "github.com/belo4ya/live-streaming-service/api/stream/v1"
 	"github.com/golang/protobuf/ptypes/empty"
+	"go.uber.org/zap"
 )
 
 type Service struct {
 	v1.UnimplementedStreamServiceServer
+	log *zap.SugaredLogger
 }
 
-func NewService() *Service {
-	return &Service{}
+func NewService(log *zap.SugaredLogger) *Service {
+	return &Service{log: log}
 }
 
 func (s *Service) ListStreams(_ context.Context, _ *empty.Empty) (*v1.ListStreamsResponse, error) {
