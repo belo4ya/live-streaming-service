@@ -6,7 +6,10 @@ import (
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/biz"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang/protobuf/ptypes/empty"
+	"github.com/google/wire"
 )
+
+var ProviderSet = wire.NewSet(NewStreamService)
 
 type StreamService struct {
 	v1.UnimplementedStreamServiceServer

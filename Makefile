@@ -1,7 +1,7 @@
 .PHONY: services
 # generate services code
 services:
-	buf generate --template buf.gen.svc.yaml --path api/stream --path api/vod
+	buf generate --template buf.gen.svc.yaml --path api/stream
 
 .PHONY: gateway
 # generate gateway code
