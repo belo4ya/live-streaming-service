@@ -7,7 +7,9 @@
 package main
 
 import (
+	"github.com/belo4ya/live-streaming-service/services/stream/internal/biz"
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/conf"
+	"github.com/belo4ya/live-streaming-service/services/stream/internal/data"
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/server"
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/service"
 	"github.com/go-kratos/kratos/v2"
@@ -16,10 +18,17 @@ import (
 
 // Injectors from wire.go:
 
-func wireApp(confServer *conf.Server, logger log.Logger) (*kratos.App, func(), error) {
-	serviceService := service.NewService(logger)
-	grpcServer := server.NewServer(confServer, serviceService)
+func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+	dataData, cleanup, err := data.NewData(confData, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	streamRepo := data.NewStreamRepo(dataData, logger)
+	streamUseCase := biz.NewStreamUseCase(streamRepo, logger)
+	streamService := service.NewStreamService(streamUseCase, logger)
+	grpcServer := server.NewServer(confServer, streamService)
 	app := newApp(logger, grpcServer)
 	return app, func() {
+		cleanup()
 	}, nil
 }

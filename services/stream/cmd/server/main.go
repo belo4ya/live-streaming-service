@@ -4,8 +4,6 @@ import (
 	"flag"
 	"github.com/belo4ya/live-streaming-service/services/stream/internal/conf"
 	"github.com/go-kratos/kratos/v2"
-	"github.com/go-kratos/kratos/v2/config"
-	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -40,32 +38,21 @@ func main() {
 	)
 	flag.Parse()
 
-	c := config.New(
-		config.WithSource(
-			file.NewSource(confPath),
-		),
-	)
+	c, b, err := conf.Load(confPath)
+	if err != nil {
+		panic(err)
+	}
 	defer c.Close()
-
-	var b conf.Bootstrap
-	if err := c.Load(); err != nil {
-		panic(err)
-	}
-	if err := c.Scan(&b); err != nil {
-		panic(err)
-	}
 
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
-		"svc.id", id,
 		"svc.name", Name,
-		"svc.version", Version,
 		"caller", log.DefaultCaller,
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
 
-	app, cleanup, err := wireApp(b.Server, logger)
+	app, cleanup, err := wireApp(b.Server, b.Data, logger)
 	if err != nil {
 		panic(err)
 	}

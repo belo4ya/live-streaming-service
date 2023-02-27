@@ -11,7 +11,7 @@ import (
 
 var ProviderSet = wire.NewSet(NewServer)
 
-func NewServer(c *conf.Server, s *service.Service) *grpc.Server {
+func NewServer(c *conf.Server, s *service.StreamService) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),

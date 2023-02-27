@@ -2,11 +2,22 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
+type Foo struct {
+	A   string
+	B   int
+	Foo *Foo
+}
+
+type Bar struct {
+	A   string
+	B   int
+	Foo *Foo
+}
+
 func main() {
-	caser := cases.Title(language.English)
-	fmt.Println(caser.String("live streaming service"))
+	foo := Foo{A: "string", B: 10, Foo: &Foo{A: "nested-string", B: 20}}
+	fmt.Printf("%+v", foo)
+	fmt.Printf("%+v", Bar(foo))
 }

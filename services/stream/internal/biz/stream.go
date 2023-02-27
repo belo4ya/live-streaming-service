@@ -1,6 +1,9 @@
 package biz
 
-import "context"
+import (
+	"context"
+	"github.com/go-kratos/kratos/v2/log"
+)
 
 type Stream struct {
 	Id       int
@@ -13,7 +16,14 @@ type StreamRepo interface {
 }
 
 type StreamUseCase struct {
+	repo StreamRepo
+	log  *log.Helper
 }
 
-func NewStreamUseCase() {
+func NewStreamUseCase(repo StreamRepo, logger log.Logger) *StreamUseCase {
+	return &StreamUseCase{repo: repo, log: log.NewHelper(logger)}
+}
+
+func (uc *StreamUseCase) ListAll(ctx context.Context) ([]*Stream, error) {
+	return uc.repo.ListAll(ctx)
 }
