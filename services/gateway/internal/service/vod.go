@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	v1 "github.com/belo4ya/live-streaming-service/api/gateway/v1"
+	v1 "github.com/belo4ya/live-streaming-service/api/jsongw/v1"
 	vodv1 "github.com/belo4ya/live-streaming-service/api/vod/v1"
 	"github.com/golang/protobuf/ptypes/empty"
 )

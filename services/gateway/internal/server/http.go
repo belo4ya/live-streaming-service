@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	v1 "github.com/belo4ya/live-streaming-service/api/gateway/v1"
+	v1 "github.com/belo4ya/live-streaming-service/api/jsongw/v1"
 	"github.com/belo4ya/live-streaming-service/third_party"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"

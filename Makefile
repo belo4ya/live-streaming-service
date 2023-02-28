@@ -6,7 +6,7 @@ services:
 .PHONY: gateway
 # generate gateway code
 gateway:
-	buf generate --template buf.gen.gw.yaml --path api/gateway
+	buf generate --template buf.gen.gw.yaml --path api/jsongw
 
 .PHONY: all
 # generate all

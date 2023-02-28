@@ -1,2 +1,5 @@
 server:
   addr: localhost:8091
+data:
+  database:
+    dsn: postgresql://postgres:postgres@localhost:5432/stream

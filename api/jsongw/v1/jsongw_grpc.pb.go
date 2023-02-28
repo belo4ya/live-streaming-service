@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             (unknown)
-// source: gateway/v1/gateway.proto
+// source: jsongw/v1/jsongw.proto
 
 package v1
 
@@ -36,7 +36,7 @@ func NewStreamServiceClient(cc grpc.ClientConnInterface) StreamServiceClient {
 
 func (c *streamServiceClient) ListStreams(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListStreamsResponse, error) {
 	out := new(ListStreamsResponse)
-	err := c.cc.Invoke(ctx, "/gateway.v1.StreamService/ListStreams", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/jsongw.v1.StreamService/ListStreams", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/gateway.v1.StreamService/ListStreams",
+		FullMethod: "/jsongw.v1.StreamService/ListStreams",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(StreamServiceServer).ListStreams(ctx, req.(*emptypb.Empty))
@@ -93,7 +93,7 @@ func _StreamService_ListStreams_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var StreamService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "gateway.v1.StreamService",
+	ServiceName: "jsongw.v1.StreamService",
 	HandlerType: (*StreamServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -102,91 +102,5 @@ var StreamService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "gateway/v1/gateway.proto",
-}
-
-// VODServiceClient is the client API for VODService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type VODServiceClient interface {
-	ListVODs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListVODsResponse, error)
-}
-
-type vODServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewVODServiceClient(cc grpc.ClientConnInterface) VODServiceClient {
-	return &vODServiceClient{cc}
-}
-
-func (c *vODServiceClient) ListVODs(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListVODsResponse, error) {
-	out := new(ListVODsResponse)
-	err := c.cc.Invoke(ctx, "/gateway.v1.VODService/ListVODs", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// VODServiceServer is the server API for VODService service.
-// All implementations must embed UnimplementedVODServiceServer
-// for forward compatibility
-type VODServiceServer interface {
-	ListVODs(context.Context, *emptypb.Empty) (*ListVODsResponse, error)
-	mustEmbedUnimplementedVODServiceServer()
-}
-
-// UnimplementedVODServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedVODServiceServer struct {
-}
-
-func (UnimplementedVODServiceServer) ListVODs(context.Context, *emptypb.Empty) (*ListVODsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListVODs not implemented")
-}
-func (UnimplementedVODServiceServer) mustEmbedUnimplementedVODServiceServer() {}
-
-// UnsafeVODServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to VODServiceServer will
-// result in compilation errors.
-type UnsafeVODServiceServer interface {
-	mustEmbedUnimplementedVODServiceServer()
-}
-
-func RegisterVODServiceServer(s grpc.ServiceRegistrar, srv VODServiceServer) {
-	s.RegisterService(&VODService_ServiceDesc, srv)
-}
-
-func _VODService_ListVODs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(VODServiceServer).ListVODs(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/gateway.v1.VODService/ListVODs",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VODServiceServer).ListVODs(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// VODService_ServiceDesc is the grpc.ServiceDesc for VODService service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var VODService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "gateway.v1.VODService",
-	HandlerType: (*VODServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "ListVODs",
-			Handler:    _VODService_ListVODs_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "gateway/v1/gateway.proto",
+	Metadata: "jsongw/v1/jsongw.proto",
 }

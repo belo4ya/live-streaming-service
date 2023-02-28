@@ -1,15 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "gateway/v1/gateway.proto",
+    "title": "jsongw/v1/jsongw.proto",
     "version": "version not set"
   },
   "tags": [
     {
       "name": "StreamService"
-    },
-    {
-      "name": "VODService"
     }
   ],
   "consumes": [
@@ -40,28 +37,6 @@
           "StreamService"
         ]
       }
-    },
-    "/api/v1/vods": {
-      "get": {
-        "operationId": "VODService_ListVODs",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListVODsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "VODService"
-        ]
-      }
     }
   },
   "definitions": {
@@ -77,25 +52,6 @@
         },
         "username": {
           "type": "string"
-        }
-      }
-    },
-    "ListVODsResponseVOD": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
         }
       }
     },
@@ -135,18 +91,6 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/ListStreamsResponseStream"
-          }
-        }
-      }
-    },
-    "v1ListVODsResponse": {
-      "type": "object",
-      "properties": {
-        "results": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/ListVODsResponseVOD"
           }
         }
       }

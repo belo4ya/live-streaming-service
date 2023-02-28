@@ -2,5 +2,5 @@ package v1
 
 import _ "embed"
 
-//go:embed gateway.swagger.json
+//go:embed jsongw.swagger.json
 var OpenAPISpec []byte

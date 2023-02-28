@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "github.com/belo4ya/live-streaming-service/api/gateway/v1"
+	v1 "github.com/belo4ya/live-streaming-service/api/jsongw/v1"
 	"github.com/belo4ya/live-streaming-service/services/gateway/internal/service"
 	"google.golang.org/grpc"
 	"log"

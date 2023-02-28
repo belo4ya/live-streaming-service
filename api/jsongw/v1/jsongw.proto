@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package jsongw.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "jsongw/v1;v1";
+
+service StreamService {
+  rpc ListStreams(google.protobuf.Empty) returns (ListStreamsResponse) {
+    option (google.api.http) = {get: "/api/v1/streams"};
+  }
+}
+
+message ListStreamsResponse {
+  message Stream {
+    int64 id = 1;
+    string name = 2;
+    string username = 3;
+  }
+  repeated Stream results = 1;
+}
