@@ -26,7 +26,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	streamRepo := data.NewStreamRepo(dataData, logger)
 	streamUseCase := biz.NewStreamUseCase(streamRepo, logger)
 	streamService := service.NewStreamService(streamUseCase, logger)
-	grpcServer := server.NewServer(confServer, streamService)
+	grpcServer := server.NewServer(confServer, streamService, logger)
 	app := newApp(logger, grpcServer)
 	return app, func() {
 		cleanup()
