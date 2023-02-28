@@ -6,7 +6,7 @@ import (
 	"github.com/belo4ya/live-streaming-service/services/jsongw/internal/data"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang/protobuf/ptypes/empty"
-	"unsafe"
+	"google.golang.org/protobuf/proto"
 )
 
 type StreamService struct {
@@ -24,6 +24,5 @@ func (s *StreamService) ListStreams(ctx context.Context, req *empty.Empty) (*v1.
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
-	return (*v1.ListStreamsResponse)(unsafe.Pointer(&r)), nil
+	return proto.Clone(r).(*v1.ListStreamsResponse), nil
 }

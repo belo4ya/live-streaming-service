@@ -25,10 +25,7 @@ func wireApp(http *conf.HTTP, grpc *conf.GRPC, logger log.Logger) (*kratos.App, 
 	}
 	streamService := service.NewStreamService(dataData, logger)
 	grpcServer := server.NewGRPCServer(grpc, streamService, logger)
-	clientConn, err := server.NewGRPCConn(grpc)
-	if err != nil {
-		return nil, nil, err
-	}
+	clientConn := server.NewGRPCConn(grpc)
 	httpServer := server.NewHTTPServer(http, clientConn, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {

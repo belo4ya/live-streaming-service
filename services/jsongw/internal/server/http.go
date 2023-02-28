@@ -8,11 +8,11 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	kgrpc "github.com/go-kratos/kratos/v2/transport/grpc"
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"io/fs"
 	"mime"
 	"net/http"
@@ -26,7 +26,7 @@ func NewHTTPServer(c *conf.HTTP, conn *grpc.ClientConn, logger log.Logger) *khtt
 		panic(err)
 	}
 	mux.Handle("/", gw)
-	OpenAPIHandler(mux)
+	mux.Handle("/doc/", http.StripPrefix("/doc", OpenAPIHandler()))
 
 	var opts = []khttp.ServerOption{
 		khttp.Middleware(
@@ -40,26 +40,29 @@ func NewHTTPServer(c *conf.HTTP, conn *grpc.ClientConn, logger log.Logger) *khtt
 	return srv
 }
 
-func NewGRPCConn(c *conf.GRPC) (*grpc.ClientConn, error) {
-	conn, err := grpc.DialContext(
+func NewGRPCConn(c *conf.GRPC) *grpc.ClientConn {
+	conn, err := kgrpc.DialInsecure(
 		context.Background(),
-		c.Addr,
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		kgrpc.WithEndpoint(c.Addr),
+		kgrpc.WithMiddleware(
+			recovery.Recovery(),
+		),
 	)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-	return conn, nil
+	return conn
 }
 
-func OpenAPIHandler(mux *http.ServeMux) http.Handler {
-	mux.HandleFunc("/doc/openapi.json", func(w http.ResponseWriter, r *http.Request) {
+func OpenAPIHandler() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/openapi.json", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(v1.OpenAPISpec)
 	})
 	mime.AddExtensionType(".svg", "image/svg+xml")
 	subFs, _ := fs.Sub(third_party.SwaggerUI, "swagger-ui")
-	mux.Handle("/doc/swagger-ui/", http.StripPrefix("/doc/swagger-ui", http.FileServer(http.FS(subFs))))
+	mux.Handle("/swagger-ui/", http.StripPrefix("/swagger-ui", http.FileServer(http.FS(subFs))))
 	return mux
 }
 

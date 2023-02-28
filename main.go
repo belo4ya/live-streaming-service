@@ -18,6 +18,11 @@ type Bar struct {
 
 func main() {
 	foo := Foo{A: "string", B: 10, Foo: &Foo{A: "nested-string", B: 20}}
-	fmt.Printf("%+v", foo)
-	fmt.Printf("%+v", Bar(foo))
+	fmt.Printf("%+v\n", foo)
+	fmt.Printf("%+v\n", Bar(foo))
+
+	fooPointer := &foo
+	barPointer := Bar(*fooPointer)
+	fmt.Printf("\n%+v\n", fooPointer)
+	fmt.Printf("%+v\n", &barPointer)
 }
