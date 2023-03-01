@@ -47,11 +47,12 @@ func main() {
 
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
-		"svc.name", Name,
+		"service", Name+":"+Version,
 		"caller", log.DefaultCaller,
 		"trace.id", tracing.TraceID(),
 		"span.id", tracing.SpanID(),
 	)
+	log.SetLogger(logger)
 
 	app, cleanup, err := wireApp(b.Server.HTTP, b.Server.GRPC, logger)
 	if err != nil {
