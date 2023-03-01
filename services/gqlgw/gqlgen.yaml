@@ -9,8 +9,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: ../../api/gqlgw/v1/model/model.go
-  package: model
+  filename: ../../api/gqlgw/v1/model.go
+  package: v1
 
 # Where should the resolver implementations go?
 resolver:
@@ -29,8 +29,8 @@ resolver:
 
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
-autobind:
-  - "github.com/belo4ya/live-streaming-service/api/gqlgw/v1/model"
+#autobind:
+#  - "github.com/belo4ya/live-streaming-service/api/gqlgw/v1"
 
 # This section declares type mapping between the GraphQL and go type systems
 #

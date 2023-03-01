@@ -9,16 +9,15 @@ import (
 	"fmt"
 
 	"github.com/belo4ya/live-streaming-service/api/gqlgw/v1"
-	"github.com/belo4ya/live-streaming-service/api/gqlgw/v1/model"
 )
 
 // CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
+func (r *mutationResolver) CreateTodo(ctx context.Context, input v1.NewTodo) (*v1.Todo, error) {
 	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
 }
 
 // Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
+func (r *queryResolver) Todos(ctx context.Context) ([]*v1.Todo, error) {
 	panic(fmt.Errorf("not implemented: Todos - todos"))
 }
 

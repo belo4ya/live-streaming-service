@@ -1,7 +1,7 @@
 package main
 
-import model "github.com/belo4ya/live-streaming-service/api/gqlgw/v1/model"
+import v1 "github.com/belo4ya/live-streaming-service/api/gqlgw/v1"
 
 func main() {
-	_ = model.Todo{}
+	_ = v1.Todo{}
 }
