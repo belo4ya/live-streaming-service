@@ -6,7 +6,6 @@ import (
 	"github.com/belo4ya/live-streaming-service/services/jsongw/internal/data"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/golang/protobuf/ptypes/empty"
-	"google.golang.org/protobuf/proto"
 )
 
 type StreamService struct {
@@ -20,9 +19,18 @@ func NewStreamService(data *data.Data, logger log.Logger) *StreamService {
 }
 
 func (s *StreamService) ListStreams(ctx context.Context, req *empty.Empty) (*v1.ListStreamsResponse, error) {
-	r, err := s.data.StreamC.ListStreams(ctx, req)
+	resp, err := s.data.StreamC.ListStreams(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return proto.Clone(r).(*v1.ListStreamsResponse), nil
+
+	results := make([]*v1.ListStreamsResponse_Stream, 0)
+	for _, r := range resp.Results {
+		results = append(results, &v1.ListStreamsResponse_Stream{
+			Id:       r.Id,
+			Name:     r.Name,
+			Username: r.Username,
+		})
+	}
+	return &v1.ListStreamsResponse{Results: results}, nil
 }
