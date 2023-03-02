@@ -1,2 +1,5 @@
 server:
   addr: localhost:8002
+kafka:
+  brokers: [ localhost:9092 ]
+  topic: chat.messages

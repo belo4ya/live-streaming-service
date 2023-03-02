@@ -8,13 +8,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/belo4ya/live-streaming-service/api/chatsub/v1"
+	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/chat"
 	"github.com/google/uuid"
 	"time"
 )
 
 // SendMessage is the resolver for the sendMessage field.
-func (r *mutationResolver) SendMessage(ctx context.Context, input *v1.NewMessage) (*v1.Message, error) {
-	chat := r.chats.GetOrCreate(input.ChannelID)
+func (r *mutationResolver) SendMessage(_ context.Context, input *v1.NewMessage) (*v1.Message, error) {
 	msg := &v1.Message{
 		ID:        uuid.NewString(),
 		CreatedAt: time.Now().UTC(),
@@ -23,12 +23,9 @@ func (r *mutationResolver) SendMessage(ctx context.Context, input *v1.NewMessage
 		Username:  input.Username,
 		Content:   input.Content,
 	}
-
-	chat.Range(func(k string, v *Subscriber) bool {
-		v.ch <- msg
-		return true
-	})
-
+	if err := r.chat.Publish(msg); err != nil {
+		return nil, err
+	}
 	return msg, nil
 }
 
@@ -39,15 +36,15 @@ func (r *queryResolver) History(ctx context.Context, offset *int) ([]*v1.Message
 
 // NewMessage is the resolver for the newMessage field.
 func (r *subscriptionResolver) NewMessage(ctx context.Context, channelID string) (<-chan *v1.Message, error) {
-	chat := r.chats.GetOrCreate(channelID)
+	chat_, _ := r.chat.LoadOrStore(channelID)
 	id := uuid.NewString()
 	ch := make(chan *v1.Message, 1)
 
 	go func() {
 		<-ctx.Done()
-		chat.Delete(id)
+		chat_.Delete(id)
 	}()
-	chat.Add(id, &Subscriber{ch: ch})
+	chat_.Store(id, chat.NewSubscriber(ch))
 
 	return ch, nil
 }

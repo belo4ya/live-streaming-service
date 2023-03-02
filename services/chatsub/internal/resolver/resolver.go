@@ -3,7 +3,7 @@
 package resolver
 
 import (
-	"github.com/ThreeDotsLabs/watermill-kafka/v2/pkg/kafka"
+	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/chat"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 )
@@ -11,17 +11,10 @@ import (
 var ProviderSet = wire.NewSet(NewResolver)
 
 type Resolver struct {
-	chats ChatMap
-	s     *kafka.Subscriber
-	p     *kafka.Publisher
-	log   *log.Helper
+	chat *chat.Controller
+	log  *log.Helper
 }
 
-func NewResolver(s *kafka.Subscriber, p *kafka.Publisher, logger log.Logger) *Resolver {
-	return &Resolver{
-		chats: NewChatMap(),
-		s:     s,
-		p:     p,
-		log:   log.NewHelper(logger),
-	}
+func NewResolver(c *chat.Controller, logger log.Logger) *Resolver {
+	return &Resolver{chat: c, log: log.NewHelper(logger)}
 }

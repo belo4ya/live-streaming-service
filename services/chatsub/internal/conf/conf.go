@@ -7,10 +7,16 @@ import (
 
 type Bootstrap struct {
 	Server *Server
+	Kafka  *Kafka
 }
 
 type Server struct {
 	Addr string
+}
+
+type Kafka struct {
+	Brokers []string
+	Topic   string
 }
 
 func Load(path string) (config.Config, *Bootstrap, error) {

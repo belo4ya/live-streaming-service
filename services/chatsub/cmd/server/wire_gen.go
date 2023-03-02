@@ -7,8 +7,8 @@
 package main
 
 import (
+	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/chat"
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/conf"
-	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/data"
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/resolver"
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/server"
 	"github.com/go-kratos/kratos/v2"
@@ -17,16 +17,22 @@ import (
 
 // Injectors from wire.go:
 
-func wireApp(confServer *conf.Server, logger log.Logger) (*kratos.App, func(), error) {
-	subscriber, err := data.NewSubscriber()
+func wireChatController(kafka *conf.Kafka, logger log.Logger) (*chat.Controller, func(), error) {
+	subscriber, err := chat.NewKafkaSubscriber(kafka)
 	if err != nil {
 		return nil, nil, err
 	}
-	publisher, err := data.NewPublisher()
+	publisher, err := chat.NewKafkaPublisher(kafka)
 	if err != nil {
 		return nil, nil, err
 	}
-	resolverResolver := resolver.NewResolver(subscriber, publisher, logger)
+	controller := chat.NewController(subscriber, publisher, kafka, logger)
+	return controller, func() {
+	}, nil
+}
+
+func wireApp(confServer *conf.Server, controller *chat.Controller, logger log.Logger) (*kratos.App, func(), error) {
+	resolverResolver := resolver.NewResolver(controller, logger)
 	httpServer := server.NewServer(confServer, resolverResolver, logger)
 	app := newApp(logger, httpServer)
 	return app, func() {

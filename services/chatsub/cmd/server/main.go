@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/conf"
 	"github.com/go-kratos/kratos/v2"
@@ -13,7 +14,7 @@ import (
 // go build -ldflags "-X main.Version=0.0.1 -X main.Name=stream"
 var (
 	Version = "0.0.1"
-	Name    = "graphql-gateway"
+	Name    = "chat-sub"
 	id, _   = os.Hostname()
 )
 
@@ -53,12 +54,21 @@ func main() {
 	)
 	log.SetLogger(logger)
 
-	app, cleanup, err := wireApp(b.Server, logger)
+	chat, cleanup, err := wireChatController(b.Kafka, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
 
+	app, cleanup, err := wireApp(b.Server, chat, logger)
+	if err != nil {
+		panic(err)
+	}
+	defer cleanup()
+
+	if err := chat.RunBroadcast(context.Background()); err != nil {
+		panic(err)
+	}
 	if err := app.Run(); err != nil {
 		panic(err)
 	}
