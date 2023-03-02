@@ -7,18 +7,59 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/belo4ya/live-streaming-service/api/gqlgw/v1"
 )
 
 // CreateTodo is the resolver for the createTodo field.
 func (r *mutationResolver) CreateTodo(ctx context.Context, input v1.NewTodo) (*v1.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+	fmt.Println("123")
+	return nil, nil
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*v1.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+	return []*v1.Todo{
+		{
+			ID:   "ID",
+			Text: "Text",
+			Done: false,
+		},
+		{
+			ID:   "ID",
+			Text: "Text",
+			Done: false,
+		},
+	}, nil
+}
+
+// CurrentTime is the resolver for the currentTime field.
+func (r *subscriptionResolver) CurrentTime(ctx context.Context) (<-chan *v1.Time, error) {
+	ch := make(chan *v1.Time)
+
+	go func() {
+		for {
+			time.Sleep(1 * time.Second)
+			fmt.Println("Tick")
+
+			currentTime := time.Now()
+			t := &v1.Time{
+				UnixTime:  int(currentTime.Unix()),
+				TimeStamp: currentTime.Format(time.RFC3339),
+			}
+
+			select {
+			case ch <- t: // This is the actual send.
+				// Our message went through, do nothing
+			default:
+				fmt.Println("Channel closed.")
+				return
+			}
+		}
+	}()
+
+	return ch, nil
 }
 
 // Mutation returns v1.MutationResolver implementation.
@@ -27,5 +68,9 @@ func (r *Resolver) Mutation() v1.MutationResolver { return &mutationResolver{r} 
 // Query returns v1.QueryResolver implementation.
 func (r *Resolver) Query() v1.QueryResolver { return &queryResolver{r} }
 
+// Subscription returns v1.SubscriptionResolver implementation.
+func (r *Resolver) Subscription() v1.SubscriptionResolver { return &subscriptionResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type subscriptionResolver struct{ *Resolver }
