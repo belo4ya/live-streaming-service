@@ -22,7 +22,6 @@ input NewStream {
 
 scalar Timestamp @goModel(model: "github.com/belo4ya/live-streaming-service/pkg/graphql.Timestamp")
 
-
 directive @goModel(
     model: String
     models: [String!]
