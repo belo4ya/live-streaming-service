@@ -54,19 +54,19 @@ func main() {
 	)
 	log.SetLogger(logger)
 
-	chat, cleanup, err := wireChatController(b.Kafka, logger)
+	br, cleanup, err := wireChatController(b.Kafka, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
 
-	app, cleanup, err := wireApp(b.Server, chat, logger)
+	app, cleanup, err := wireApp(b.Server, br, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
 
-	if err := chat.RunBroadcast(context.Background()); err != nil {
+	if err := br.Run(context.Background()); err != nil {
 		panic(err)
 	}
 	if err := app.Run(); err != nil {

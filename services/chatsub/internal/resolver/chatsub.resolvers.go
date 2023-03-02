@@ -23,7 +23,7 @@ func (r *mutationResolver) SendMessage(_ context.Context, input *v1.NewMessage) 
 		Username:  input.Username,
 		Content:   input.Content,
 	}
-	if err := r.chat.Publish(msg); err != nil {
+	if err := r.br.Publish(msg); err != nil {
 		return nil, err
 	}
 	return msg, nil
@@ -36,7 +36,7 @@ func (r *queryResolver) History(ctx context.Context, offset *int) ([]*v1.Message
 
 // NewMessage is the resolver for the newMessage field.
 func (r *subscriptionResolver) NewMessage(ctx context.Context, channelID string) (<-chan *v1.Message, error) {
-	chat_, _ := r.chat.LoadOrStore(channelID)
+	chat_, _ := r.br.LoadOrStore(channelID)
 	id := uuid.NewString()
 	ch := make(chan *v1.Message, 1)
 

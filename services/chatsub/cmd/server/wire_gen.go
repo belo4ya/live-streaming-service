@@ -17,7 +17,7 @@ import (
 
 // Injectors from wire.go:
 
-func wireChatController(kafka *conf.Kafka, logger log.Logger) (*chat.Controller, func(), error) {
+func wireChatController(kafka *conf.Kafka, logger log.Logger) (*chat.Broadcaster, func(), error) {
 	subscriber, err := chat.NewKafkaSubscriber(kafka)
 	if err != nil {
 		return nil, nil, err
@@ -26,13 +26,13 @@ func wireChatController(kafka *conf.Kafka, logger log.Logger) (*chat.Controller,
 	if err != nil {
 		return nil, nil, err
 	}
-	controller := chat.NewController(subscriber, publisher, kafka, logger)
-	return controller, func() {
+	broadcaster := chat.NewBroadcaster(subscriber, publisher, kafka, logger)
+	return broadcaster, func() {
 	}, nil
 }
 
-func wireApp(confServer *conf.Server, controller *chat.Controller, logger log.Logger) (*kratos.App, func(), error) {
-	resolverResolver := resolver.NewResolver(controller, logger)
+func wireApp(confServer *conf.Server, broadcaster *chat.Broadcaster, logger log.Logger) (*kratos.App, func(), error) {
+	resolverResolver := resolver.NewResolver(broadcaster, logger)
 	httpServer := server.NewServer(confServer, resolverResolver, logger)
 	app := newApp(logger, httpServer)
 	return app, func() {

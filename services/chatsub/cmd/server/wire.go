@@ -12,10 +12,10 @@ import (
 	"github.com/google/wire"
 )
 
-func wireChatController(*conf.Kafka, log.Logger) (*chat.Controller, func(), error) {
+func wireChatController(*conf.Kafka, log.Logger) (*chat.Broadcaster, func(), error) {
 	panic(wire.Build(chat.ProviderSet))
 }
 
-func wireApp(*conf.Server, *chat.Controller, log.Logger) (*kratos.App, func(), error) {
+func wireApp(*conf.Server, *chat.Broadcaster, log.Logger) (*kratos.App, func(), error) {
 	panic(wire.Build(server.ProviderSet, resolver.ProviderSet, newApp))
 }

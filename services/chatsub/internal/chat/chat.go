@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-var ProviderSet = wire.NewSet(NewController, NewKafkaSubscriber, NewKafkaPublisher)
+var ProviderSet = wire.NewSet(NewBroadcaster, NewKafkaSubscriber, NewKafkaPublisher)
 
 type Subscriber struct {
 	ch chan *v1.Message
@@ -23,7 +23,7 @@ type Chat struct {
 	subs sync.Map
 }
 
-type Controller struct {
+type Broadcaster struct {
 	chats sync.Map
 	s     *kafka.Subscriber
 	p     *kafka.Publisher
@@ -31,8 +31,8 @@ type Controller struct {
 	log   *log.Helper
 }
 
-func NewController(s *kafka.Subscriber, p *kafka.Publisher, c *conf.Kafka, logger log.Logger) *Controller {
-	return &Controller{
+func NewBroadcaster(s *kafka.Subscriber, p *kafka.Publisher, c *conf.Kafka, logger log.Logger) *Broadcaster {
+	return &Broadcaster{
 		chats: sync.Map{},
 		s:     s,
 		p:     p,
@@ -41,12 +41,12 @@ func NewController(s *kafka.Subscriber, p *kafka.Publisher, c *conf.Kafka, logge
 	}
 }
 
-func (c *Controller) LoadOrStore(id string) (*Chat, bool) {
+func (c *Broadcaster) LoadOrStore(id string) (*Chat, bool) {
 	chat, loaded := c.chats.LoadOrStore(id, &Chat{subs: sync.Map{}})
 	return chat.(*Chat), loaded
 }
 
-func (c *Controller) Publish(msg *v1.Message) error {
+func (c *Broadcaster) Publish(msg *v1.Message) error {
 	payload, err := json.Marshal(msg)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func (c *Controller) Publish(msg *v1.Message) error {
 	return nil
 }
 
-func (c *Controller) RunBroadcast(ctx context.Context) error {
+func (c *Broadcaster) Run(ctx context.Context) error {
 	events, err := c.s.Subscribe(ctx, c.topic)
 	if err != nil {
 		return err

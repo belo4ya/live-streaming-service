@@ -11,10 +11,10 @@ import (
 var ProviderSet = wire.NewSet(NewResolver)
 
 type Resolver struct {
-	chat *chat.Controller
-	log  *log.Helper
+	br  *chat.Broadcaster
+	log *log.Helper
 }
 
-func NewResolver(c *chat.Controller, logger log.Logger) *Resolver {
-	return &Resolver{chat: c, log: log.NewHelper(logger)}
+func NewResolver(b *chat.Broadcaster, logger log.Logger) *Resolver {
+	return &Resolver{br: b, log: log.NewHelper(logger)}
 }
