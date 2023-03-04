@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	v1 "github.com/belo4ya/live-streaming-service/api/jsongw/v1"
 	"github.com/belo4ya/live-streaming-service/services/jsongw/internal/data"
 	"github.com/go-kratos/kratos/v2/log"
@@ -23,14 +24,17 @@ func (s *StreamService) ListStreams(ctx context.Context, req *empty.Empty) (*v1.
 	if err != nil {
 		return nil, err
 	}
+	return proxy(&v1.ListStreamsResponse{}, resp)
+}
 
-	results := make([]*v1.ListStreamsResponse_Stream, 0)
-	for _, r := range resp.Results {
-		results = append(results, &v1.ListStreamsResponse_Stream{
-			Id:       r.Id,
-			Name:     r.Name,
-			Username: r.Username,
-		})
+func proxy[D any, S any](dst D, src S) (D, error) {
+	b, err := json.Marshal(src)
+	if err != nil {
+		return *new(D), err
 	}
-	return &v1.ListStreamsResponse{Results: results}, nil
+	err = json.Unmarshal(b, dst)
+	if err != nil {
+		return *new(D), err
+	}
+	return dst, nil
 }
