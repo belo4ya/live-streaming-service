@@ -7,13 +7,29 @@ package resolver
 import (
 	"context"
 	"fmt"
-
 	"github.com/belo4ya/live-streaming-service/api/chatsub/v1"
+	"github.com/google/uuid"
+	"time"
 )
 
 // SendMessage is the resolver for the sendMessage field.
 func (r *mutationResolver) SendMessage(ctx context.Context, input *v1.NewMessage) (*v1.Message, error) {
-	panic(fmt.Errorf("not implemented: SendMessage - sendMessage"))
+	chat := r.chats.GetOrCreate(input.ChannelID)
+	msg := &v1.Message{
+		ID:        uuid.NewString(),
+		CreatedAt: time.Now().UTC(),
+		ChannelID: input.ChannelID,
+		UserID:    input.UserID,
+		Username:  input.Username,
+		Content:   input.Content,
+	}
+
+	chat.Range(func(k string, v *Subscriber) bool {
+		v.ch <- msg
+		return true
+	})
+
+	return msg, nil
 }
 
 // History is the resolver for the history field.
@@ -23,7 +39,17 @@ func (r *queryResolver) History(ctx context.Context, offset *int) ([]*v1.Message
 
 // NewMessage is the resolver for the newMessage field.
 func (r *subscriptionResolver) NewMessage(ctx context.Context, channelID string) (<-chan *v1.Message, error) {
-	panic(fmt.Errorf("not implemented: NewMessage - newMessage"))
+	chat := r.chats.GetOrCreate(channelID)
+	id := uuid.NewString()
+	ch := make(chan *v1.Message, 1)
+
+	go func() {
+		<-ctx.Done()
+		chat.Delete(id)
+	}()
+	chat.Add(id, &Subscriber{ch: ch})
+
+	return ch, nil
 }
 
 // Mutation returns v1.MutationResolver implementation.

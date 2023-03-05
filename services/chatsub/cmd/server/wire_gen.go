@@ -8,6 +8,7 @@ package main
 
 import (
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/conf"
+	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/data"
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/resolver"
 	"github.com/belo4ya/live-streaming-service/services/chatsub/internal/server"
 	"github.com/go-kratos/kratos/v2"
@@ -17,7 +18,15 @@ import (
 // Injectors from wire.go:
 
 func wireApp(confServer *conf.Server, logger log.Logger) (*kratos.App, func(), error) {
-	resolverResolver := resolver.NewResolver(logger)
+	subscriber, err := data.NewSubscriber()
+	if err != nil {
+		return nil, nil, err
+	}
+	publisher, err := data.NewPublisher()
+	if err != nil {
+		return nil, nil, err
+	}
+	resolverResolver := resolver.NewResolver(subscriber, publisher, logger)
 	httpServer := server.NewServer(confServer, resolverResolver, logger)
 	app := newApp(logger, httpServer)
 	return app, func() {

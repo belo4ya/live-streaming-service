@@ -11,6 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/wire"
+	"net/http"
 )
 
 var ProviderSet = wire.NewSet(NewServer)
@@ -26,7 +27,7 @@ func NewServer(c *conf.Server, r *resolver.Resolver, logger log.Logger) *khttp.S
 	srv := khttp.NewServer(opts...)
 
 	gql := handler.NewDefaultServer(v1.NewExecutableSchema(v1.Config{Resolvers: r}))
-	srv.Handle("/", playground.Handler("GraphQL playground", "/chat"))
-	srv.Handle("/chat", gql)
+	http.Handle("/", playground.Handler("GraphQL playground", "/chat"))
+	http.Handle("/chat", gql)
 	return srv
 }
