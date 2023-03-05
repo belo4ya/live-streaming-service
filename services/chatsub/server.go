@@ -7,7 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/belo4ya/live-streaming-service/services/chat/graph"
+	"github.com/belo4ya/live-streaming-service/services/chatsub/graph"
 )
 
 const defaultPort = "8080"
