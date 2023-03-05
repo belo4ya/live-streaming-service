@@ -2,24 +2,20 @@
 
 package v1
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+import (
+	"time"
+)
+
+type NewStream struct {
+	Name     string `json:"name"`
+	Username bool   `json:"username"`
 }
 
-type Time struct {
-	UnixTime  int    `json:"unixTime"`
-	TimeStamp string `json:"timeStamp"`
-}
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type Stream struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	Username  string    `json:"username"`
+	Viewers   int       `json:"viewers"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }

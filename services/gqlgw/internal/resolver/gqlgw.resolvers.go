@@ -7,59 +7,37 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/belo4ya/live-streaming-service/api/gqlgw/v1"
+	"github.com/golang/protobuf/ptypes/empty"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input v1.NewTodo) (*v1.Todo, error) {
-	fmt.Println("123")
-	return nil, nil
+// CreateStream is the resolver for the createStream field.
+func (r *mutationResolver) CreateStream(ctx context.Context, input v1.NewStream) (*v1.Stream, error) {
+	panic(fmt.Errorf("not implemented: CreateStream - createStream"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*v1.Todo, error) {
-	return []*v1.Todo{
-		{
-			ID:   "ID",
-			Text: "Text",
-			Done: false,
-		},
-		{
-			ID:   "ID",
-			Text: "Text",
-			Done: false,
-		},
-	}, nil
-}
+// Streams is the resolver for the streams field.
+func (r *queryResolver) Streams(ctx context.Context) ([]*v1.Stream, error) {
+	resp, err := r.data.StreamC.ListStreams(ctx, &empty.Empty{})
+	if err != nil {
+		return nil, err
+	}
 
-// CurrentTime is the resolver for the currentTime field.
-func (r *subscriptionResolver) CurrentTime(ctx context.Context) (<-chan *v1.Time, error) {
-	ch := make(chan *v1.Time)
-
-	go func() {
-		for {
-			time.Sleep(1 * time.Second)
-			fmt.Println("Tick")
-
-			currentTime := time.Now()
-			t := &v1.Time{
-				UnixTime:  int(currentTime.Unix()),
-				TimeStamp: currentTime.Format(time.RFC3339),
-			}
-
-			select {
-			case ch <- t: // This is the actual send.
-				// Our message went through, do nothing
-			default:
-				fmt.Println("Channel closed.")
-				return
-			}
-		}
-	}()
-
-	return ch, nil
+	streams := make([]*v1.Stream, 0, len(resp.Results))
+	for _, stream := range resp.Results {
+		streams = append(streams, &v1.Stream{
+			ID:        strconv.Itoa(int(stream.Id)),
+			Name:      stream.Name,
+			Username:  stream.Username,
+			Viewers:   0,
+			CreatedAt: time.Now().UTC(),
+			UpdatedAt: time.Now().UTC(),
+		})
+	}
+	return streams, nil
 }
 
 // Mutation returns v1.MutationResolver implementation.
@@ -68,9 +46,5 @@ func (r *Resolver) Mutation() v1.MutationResolver { return &mutationResolver{r} 
 // Query returns v1.QueryResolver implementation.
 func (r *Resolver) Query() v1.QueryResolver { return &queryResolver{r} }
 
-// Subscription returns v1.SubscriptionResolver implementation.
-func (r *Resolver) Subscription() v1.SubscriptionResolver { return &subscriptionResolver{r} }
-
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-type subscriptionResolver struct{ *Resolver }
