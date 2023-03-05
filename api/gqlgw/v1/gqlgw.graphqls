@@ -20,7 +20,7 @@ input NewStream {
     username: Boolean!
 }
 
-scalar Timestamp @goModel(model: "github.com/belo4ya/live-streaming-service/api/gqlgw/v1.Timestamp")
+scalar Timestamp @goModel(model: "github.com/belo4ya/live-streaming-service/pkg/graphql.Timestamp")
 
 
 directive @goModel(
