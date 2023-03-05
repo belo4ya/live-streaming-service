@@ -7,20 +7,25 @@
 package main
 
 import (
+	"github.com/belo4ya/live-streaming-service/services/gqlgw/internal/conf"
 	"github.com/belo4ya/live-streaming-service/services/gqlgw/internal/data"
 	"github.com/belo4ya/live-streaming-service/services/gqlgw/internal/resolver"
+	"github.com/belo4ya/live-streaming-service/services/gqlgw/internal/server"
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 // Injectors from wire.go:
 
-func wireResolver(logger log.Logger) (*resolver.Resolver, func(), error) {
+func wireApp(confServer *conf.Server, logger log.Logger) (*kratos.App, func(), error) {
 	streamServiceClient := data.NewStreamServiceClient()
 	dataData, err := data.NewData(streamServiceClient)
 	if err != nil {
 		return nil, nil, err
 	}
 	resolverResolver := resolver.NewResolver(dataData, logger)
-	return resolverResolver, func() {
+	httpServer := server.NewServer(confServer, resolverResolver, logger)
+	app := newApp(logger, httpServer)
+	return app, func() {
 	}, nil
 }

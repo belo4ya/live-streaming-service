@@ -1,26 +1,48 @@
 package main
 
 import (
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/99designs/gqlgen/graphql/playground"
-	v1 "github.com/belo4ya/live-streaming-service/api/gqlgw/v1"
+	"flag"
+	"github.com/belo4ya/live-streaming-service/services/gqlgw/internal/conf"
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
-	"net/http"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"os"
-	"time"
 )
 
 // go build -ldflags "-X main.Version=0.0.1 -X main.Name=stream"
 var (
 	Version = "0.0.1"
-	Name    = "json-gateway"
+	Name    = "graphql-gateway"
 	id, _   = os.Hostname()
 )
 
+func newApp(logger log.Logger, srv *http.Server) *kratos.App {
+	return kratos.New(
+		kratos.ID(id),
+		kratos.Name(Name),
+		kratos.Version(Version),
+		kratos.Metadata(map[string]string{}),
+		kratos.Logger(logger),
+		kratos.Server(srv),
+	)
+}
+
 func main() {
-	port := "8001"
+	var confPath string
+	flag.StringVar(
+		&confPath,
+		"conf",
+		"services/gqlgw/configs/config.yaml",
+		"config path, eg: --conf config.yaml",
+	)
+	flag.Parse()
+
+	c, b, err := conf.Load(confPath)
+	if err != nil {
+		panic(err)
+	}
+	defer c.Close()
 
 	logger := log.With(log.NewStdLogger(os.Stdout),
 		"ts", log.DefaultTimestamp,
@@ -31,18 +53,13 @@ func main() {
 	)
 	log.SetLogger(logger)
 
-	r, cleanup, err := wireResolver(logger)
+	app, cleanup, err := wireApp(b.Server, logger)
 	if err != nil {
 		panic(err)
 	}
 	defer cleanup()
 
-	srv := handler.NewDefaultServer(v1.NewExecutableSchema(v1.Config{Resolvers: r}))
-	srv.AddTransport(transport.Websocket{PingPongInterval: 10 * time.Second})
-
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
-
-	log.Infof("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	if err := app.Run(); err != nil {
+		panic(err)
+	}
 }

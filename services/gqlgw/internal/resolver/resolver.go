@@ -5,7 +5,10 @@ package resolver
 import (
 	"github.com/belo4ya/live-streaming-service/services/gqlgw/internal/data"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/google/wire"
 )
+
+var ProviderSet = wire.NewSet(NewResolver)
 
 type Resolver struct {
 	data *data.Data

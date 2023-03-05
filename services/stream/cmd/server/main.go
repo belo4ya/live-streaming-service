@@ -33,7 +33,7 @@ func main() {
 	flag.StringVar(
 		&confPath,
 		"conf",
-		"../../configs/config.yaml",
+		"services/stream/configs/config.yaml",
 		"config path, eg: --conf config.yaml",
 	)
 	flag.Parse()

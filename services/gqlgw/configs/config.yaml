@@ -1,0 +1,2 @@
+server:
+  addr: localhost:8001
