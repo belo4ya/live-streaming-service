@@ -1,0 +1,6 @@
+/caddy/data/
+/grafana/data/
+/kafka/data/
+/loki/data/
+/loki/s3/
+/prometheus/data/

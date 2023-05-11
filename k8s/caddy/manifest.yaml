@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: caddy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caddy
+  namespace: caddy
+  labels:
+    app: caddy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caddy
+  template:
+    metadata:
+      labels:
+        app: caddy
+    spec:
+      containers:
+        - name: caddy
+          image: caddy:latest
+          ports:
+            - containerPort: 80
+              name: http
+            - containerPort: 443
+              name: https
+          volumeMounts:
+            - mountPath: /etc/caddy/Caddyfile
+              name: caddy
+              subPath: config/Caddyfile
+            - mountPath: /config
+              name: caddy
+              subPath: config
+            - mountPath: /data
+              name: caddy
+              subPath: data
+      volumes:
+        - name: caddy
+          hostPath:
+            path: /Users/aikovalev/My/github/live-streaming-service/k8s/caddy
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: caddy
+  namespace: caddy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caddy
+  namespace: caddy
+spec:
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
+  selector:
+    app: caddy
+---
