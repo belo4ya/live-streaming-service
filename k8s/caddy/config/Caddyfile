@@ -5,20 +5,14 @@
 	}
 }
 
-https://localhost {
-	respond "Caddy Reverse Proxy"
+localhost {
 
-	@authelia path /auth /auth/*
-	handle @authelia {
-		reverse_proxy :9091
-	}
+    @check path /check /check
+    handle @check {
+	    respond "👋 from Caddy"
+    }
 
-	@streams path /streams /streams/*
-	handle @streams {
-		forward_auth :9091 {
-			uri /api/verify?rd=https://localhost/auth/
-			copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
-		}
-		reverse_proxy :8001
+	handle {
+		reverse_proxy :2019
 	}
 }
