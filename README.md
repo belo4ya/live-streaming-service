@@ -1,5 +1,5 @@
 # live-streaming-service
 
-<img src="docs/assets/images/preview.gif" width="900">
+<img src="docs/assets/images/preview.gif" width="800">
 
 ### [SLIDES](docs/university/slides.pdf)
